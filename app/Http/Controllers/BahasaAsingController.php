@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\bahasa_asing;
+use App\Models\data_pribadi;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class BahasaAsingController extends Controller
 {
@@ -13,6 +16,12 @@ class BahasaAsingController extends Controller
     public function index()
     {
         //
+        $no_hp = Auth::user()->no_hp; // Mengambil pengguna yang sedang login
+        $data_pribadi = data_pribadi::where('no_hp', $no_hp)->first();
+        $bahasa_asing_status = bahasa_asing::where('data_pribadis_id', $data_pribadi->id)->first();
+        $bahasa_asing = bahasa_asing::where('data_pribadis_id', $data_pribadi->id)->get();
+        // dd($bahasa_asing);
+        return view('data_karyawan.bahasa_asing')->with('data_pribadi', $data_pribadi)->with('bahasa_asing_status', $bahasa_asing_status)->with('bahasa_asing', $bahasa_asing);
     }
 
     /**
@@ -29,6 +38,36 @@ class BahasaAsingController extends Controller
     public function store(Request $request)
     {
         //
+        $status_isi = $request->input('status_isi');
+        // if($status_isi == '1'){
+        //     $bahasa_asing = bahasa_asing::where('data_pribadis_id', $request->id)->get();
+        //     // Loop melalui setiap entri dan perbarui status_isi
+        //     foreach ($bahasa_asing as $data) {
+        //         $data->status_isi = $status_isi;
+        //         $data->update();
+        //     }
+        //     return redirect('data_karyawan');
+        // } else {
+        // 1. Validasi
+        $validateData = $request->validate([
+            'lisan'   => 'required',
+            'tulisan' => 'required'
+        ],
+        [
+            'lisan.required'   => 'Pilih Nilai Keahlian',
+            'tulisan.required' => 'Pilih Nilai Keahlian'
+        ]);
+
+        $bahasa_asing = new bahasa_asing();
+        $bahasa_asing->data_pribadis_id = $request->id;
+        $bahasa_asing->lisan            = $validateData['lisan'];
+        $bahasa_asing->tulisan          = $validateData['tulisan'];
+        $bahasa_asing->status_isi       = $status_isi;
+        $bahasa_asing->save();
+
+        Alert::success('Data Tersimpan', "Terima Kasih Sudah Mengisi Data");
+        return redirect()->route('data_karyawan.index');
+        // }
     }
 
     /**

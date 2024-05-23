@@ -22,6 +22,13 @@
             justify-content: center;
             /* Mengatur agar konten berada di tengah */
         }
+
+        .card hr {
+            margin-left: 0;
+            margin-right: 0;
+            width: 100%;
+            box-sizing: border-box;
+        }
     </style>
 
     <div class="card card-primary">
@@ -82,7 +89,7 @@
                             @csrf
 
                             <div class="row">
-                                @if ($data_keluarga_inti_status->status_isi == '0')
+                                @if (!$data_keluarga_inti_status || $data_keluarga_inti_status->status_isi == '0')
                                     <input type="hidden" name="id" value="{{ $data_pribadi->id }}">
 
                                     <div class="form-group col-lg-3 col-md-6 col-sm-12">
@@ -368,28 +375,31 @@
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
                                         </div>
+                                        <hr class="mt-3">
                                     @endforeach
                                 @endif
                             </div>
 
                             <div class="form-check ml-1">
                                 <input class="form-check-input" type="checkbox" id="checkbox"
-                                    @disabled($data_keluarga_inti_status->status_isi == '1')>
+                                    @disabled($data_keluarga_inti_status && $data_keluarga_inti_status->status_isi == '1')>
                                 <label class="form-check-label"><small class="text-bold">Dengan melakukan centang anda
                                         dengan
                                         kesadaran penuh bertanggung jawab atas keaslian data yang disimpan</small></label>
                             </div>
                             <div class="mb-4">
-                                <p class="text-danger">*Semua file yang disimpan tidak dapat diubah, pastikan semua inputan
+                                <p class="text-danger">*Semua data yang disimpan tidak dapat diubah, pastikan semua inputan
                                     sudah diisi dengan benar!</p>
                             </div>
                             <div class="mt-2">
                                 <button type="submit" class="btn btn-primary" name="status_isi" value="0"
-                                    onclick="setRequired(true)" @disabled($data_keluarga_inti_status->status_isi == '1')>Tambah
+                                    onclick="setRequired(true)" @disabled($data_keluarga_inti_status && $data_keluarga_inti_status->status_isi == '1')>Tambah
                                     Data Lainnya</button>
-                                <button type="submit" class="btn btn-primary" name="status_isi" value="1"
-                                    onclick="setRequired(false)" @disabled($data_keluarga_inti_status->status_isi == '1')>Next</button>
+                                <button type="button" class="btn btn-primary" data-toggle="modal"
+                                    data-target="#yakinModal" onclick="setRequired(false)"
+                                    @disabled($data_keluarga_inti_status && $data_keluarga_inti_status->status_isi == '1')>Next</button>
                             </div>
+                            @include('data_karyawan.modal')
 
                         </form>
                     </div>

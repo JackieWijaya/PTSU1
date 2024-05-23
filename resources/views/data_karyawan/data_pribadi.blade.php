@@ -383,9 +383,9 @@
 
                                     <input type="text" class="form-control @error('nik_pribadi') is-invalid @enderror"
                                         name="nik_pribadi" id="nik_pribadi"
-                                        @if ($data_pribadi->status_isi == '0') value="{{ old('nik_pribadi') }}" @else value="{{ $data_pribadi->nik }}" @endif
+                                        @if (!$data_pribadi || $data_pribadi->status_isi == '0') value="{{ old('nik_pribadi') }}" @else value="{{ $data_pribadi->nik }}" @endif
                                         pattern="[0-9]+" title="Masukkan hanya angka" placeholder="Enter NIK"
-                                        @disabled($data_pribadi->status_isi == '1')>
+                                        @disabled($data_pribadi && $data_pribadi->status_isi == '1')>
 
                                     @error('nik_pribadi')
                                         <div class="text-danger">{{ $message }}</div>
@@ -396,9 +396,9 @@
                                     <label for="ktp">KTP</label>
                                     <input type="file" class="form-control @error('ktp') is-invalid @enderror"
                                         id="ktp" name="ktp"
-                                        @if ($data_pribadi->status_isi == '0') value="{{ old('ktp') }}"
+                                        @if (!$data_pribadi || $data_pribadi->status_isi == '0') value="{{ old('ktp') }}"
                                         @else value="{{ $data_pribadi->ktp }}" @endif
-                                        placeholder="Enter KTP" @disabled($data_pribadi->status_isi == '1')>
+                                        placeholder="Enter KTP" @disabled($data_pribadi && $data_pribadi->status_isi == '1')>
                                     @if (!$errors->has('ktp'))
                                         <p>*Ukuran File Maks 800 KB | Format .jpg, .jpeg, atau .png</p>
                                     @endif
@@ -413,9 +413,9 @@
                                     <small class="text-muted">(Kosongkan Jika Tidak Ada)</small>
                                     <input type="file" class="form-control @error('rekening') is-invalid @enderror"
                                         id="rekening" name="rekening"
-                                        @if ($data_pribadi->status_isi == '0') value="{{ old('rekening') }}"
+                                        @if (!$data_pribadi || $data_pribadi->status_isi == '0') value="{{ old('rekening') }}"
                                         @else value="{{ $data_pribadi->rekening }}" @endif
-                                        placeholder="Enter Rekening" @disabled($data_pribadi->status_isi == '1')>
+                                        placeholder="Enter Rekening" @disabled($data_pribadi && $data_pribadi->status_isi == '1')>
                                     @if (!$errors->has('rekening'))
                                         <p>*Ukuran File Maks 800 KB | Format .jpg, .jpeg, atau .png</p>
                                     @endif
@@ -431,8 +431,8 @@
                                         Ada)</small>
                                     <input type="file" class="form-control @error('sim') is-invalid @enderror"
                                         id="sim" name="sim"
-                                        @if ($data_pribadi->status_isi == '0') value="{{ old('sim') }}" @else value="{{ $data_pribadi->sim }}" @endif
-                                        placeholder="Enter SIM" @disabled($data_pribadi->status_isi == '1')>
+                                        @if (!$data_pribadi || $data_pribadi->status_isi == '0') value="{{ old('sim') }}" @else value="{{ $data_pribadi->sim }}" @endif
+                                        placeholder="Enter SIM" @disabled($data_pribadi && $data_pribadi->status_isi == '1')>
                                     @if (!$errors->has('sim'))
                                         <p>*Ukuran File Maks 800 KB | Format .jpg, .jpeg, atau .png</p>
                                     @endif
@@ -446,8 +446,8 @@
                                     <label for="kk">Kartu Keluarga</label>
                                     <input type="file" class="form-control @error('kk') is-invalid @enderror"
                                         id="kk" name="kk"
-                                        @if ($data_pribadi->status_isi == '0') value="{{ old('kk') }}" @else value="{{ $data_pribadi->kk }}" @endif
-                                        placeholder="Enter Kartu Keluarga" @disabled($data_pribadi->status_isi == '1')>
+                                        @if (!$data_pribadi || $data_pribadi->status_isi == '0') value="{{ old('kk') }}" @else value="{{ $data_pribadi->kk }}" @endif
+                                        placeholder="Enter Kartu Keluarga" @disabled($data_pribadi && $data_pribadi->status_isi == '1')>
                                     @if (!$errors->has('kk'))
                                         <p>*Ukuran File Maks 800 KB | Format .jpg, .jpeg, atau .png</p>
                                     @endif
@@ -463,8 +463,8 @@
                                     <input type="file"
                                         class="form-control @error('bpjs_ketenagakerjaan') is-invalid @enderror"
                                         id="bpjs_ketenagakerjaan" name="bpjs_ketenagakerjaan"
-                                        @if ($data_pribadi->status_isi == '0') value="{{ old('bpjs_ketenagakerjaan') }}" @else value="{{ $data_pribadi->bpjs_ketenagakerjaan }}" @endif
-                                        placeholder="Enter BPJS Ketenagakerjaan" @disabled($data_pribadi->status_isi == '1')>
+                                        @if (!$data_pribadi || $data_pribadi->status_isi == '0') value="{{ old('bpjs_ketenagakerjaan') }}" @else value="{{ $data_pribadi->bpjs_ketenagakerjaan }}" @endif
+                                        placeholder="Enter BPJS Ketenagakerjaan" @disabled($data_pribadi && $data_pribadi->status_isi == '1')>
                                     @if (!$errors->has('bpjs_ketenagakerjaan'))
                                         <p>*Ukuran File Maks 800 KB | Format .jpg, .jpeg, atau .png</p>
                                     @endif
@@ -480,8 +480,8 @@
                                     <input type="file"
                                         class="form-control @error('bpjs_kesehatan') is-invalid @enderror"
                                         id="bpjs_kesehatan" name="bpjs_kesehatan"
-                                        @if ($data_pribadi->status_isi == '0') value="{{ old('bpjs_kesehatan') }}" @else value="{{ $data_pribadi->bpjs_kesehatan }}" @endif
-                                        placeholder="Enter BPJS Kesehatan" @disabled($data_pribadi->status_isi == '1')>
+                                        @if (!$data_pribadi || $data_pribadi->status_isi == '0') value="{{ old('bpjs_kesehatan') }}" @else value="{{ $data_pribadi->bpjs_kesehatan }}" @endif
+                                        placeholder="Enter BPJS Kesehatan" @disabled($data_pribadi && $data_pribadi->status_isi == '1')>
                                     @if (!$errors->has('bpjs_kesehatan'))
                                         <p>*Ukuran File Maks 800 KB | Format .jpg, .jpeg, atau .png</p>
                                     @endif
@@ -496,8 +496,8 @@
                                     <small class="text-muted">(Kosongkan Jika Tidak Ada)</small>
                                     <input type="file" class="form-control @error('npwp') is-invalid @enderror"
                                         id="npwp" name="npwp"
-                                        @if ($data_pribadi->status_isi == '0') value="{{ old('npwp') }}" @else value="{{ $data_pribadi->npwp }}" @endif
-                                        placeholder="Enter NPWP" @disabled($data_pribadi->status_isi == '1')>
+                                        @if (!$data_pribadi || $data_pribadi->status_isi == '0') value="{{ old('npwp') }}" @else value="{{ $data_pribadi->npwp }}" @endif
+                                        placeholder="Enter NPWP" @disabled($data_pribadi && $data_pribadi->status_isi == '1')>
                                     @if (!$errors->has('npwp'))
                                         <p>*Ukuran File Maks 800 KB | Format .jpg, .jpeg, atau .png</p>
                                     @endif
@@ -508,21 +508,22 @@
                                 </div>
                             </div>
                             <div class="form-check ml-1">
-                                <input class="form-check-input" type="checkbox" required @disabled($data_pribadi->status_isi == '1')>
+                                <input class="form-check-input" type="checkbox" required @disabled($data_pribadi && $data_pribadi->status_isi == '1')>
                                 <label class="form-check-label"><small class="text-bold">Dengan melakukan centang anda
                                         dengan
                                         kesadaran penuh bertanggung jawab atas keaslian data yang disimpan</small></label>
                             </div>
                             <div class="mb-4">
-                                <p class="text-danger">*Semua file yang disimpan tidak dapat diubah, pastikan semua inputan
+                                <p class="text-danger">*Semua data yang disimpan tidak dapat diubah, pastikan semua inputan
                                     sudah diisi dengan benar!</p>
                             </div>
                             <div class="mt-2">
                                 {{-- <button type="submit" class="btn btn-primary" name="status_isi" value="0">Tambah
                                     Data Lainnya</button> --}}
-                                <button type="submit" class="btn btn-primary" name="status_isi" value="1"
-                                    @disabled($data_pribadi->status_isi == '1')>Next</button>
+                                <button type="button" class="btn btn-primary" data-toggle="modal"
+                                    data-target="#yakinModal" @disabled($data_pribadi && $data_pribadi->status_isi == '1')>Next</button>
                             </div>
+                            @include('data_karyawan.modal')
 
                         </form>
                     </div>
@@ -531,6 +532,8 @@
             </div>
         </div>
     </div>
+
+    {{-- @include('data_karyawan.modal') --}}
 
     {{-- script pratinjaugambar --}}
     <script src="{{ asset('dist/js/pratinjaugambar.js') }}"></script>

@@ -1,6 +1,6 @@
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio,line-clamp"></script>
-<link rel="shortcut icon" href="{{ asset('storage/Logo/PTSU.png') }}" type="image/x-icon">
+<link rel="shortcut icon" href="{{ asset('storage/Logo/PTSU.ico') }}" type="image/x-icon">
 <x-guest-layout>
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />

@@ -287,7 +287,7 @@
                         <label class="form-check-label"><small class="text-bold">Dengan melakukan centang anda dengan
                                 kesadaran penuh bertanggung jawab atas keaslian data yang dikirim</small></label>
                     </div>
-                    <p class="text-danger">*Semua file yang dikirim tidak dapat diubah!</p><br>
+                    <p class="text-danger">*Semua data yang dikirim tidak dapat diubah!</p><br>
                     <button type="submit" class="btn btn-primary">Kirim</button>
                 </div>
 
