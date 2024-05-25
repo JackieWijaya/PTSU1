@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('jenis');
             $table->date('mulai');
             $table->date('akhir');
+            $table->string('sertifikat');
             $table->string('status_isi');
             $table->timestamps();
         });

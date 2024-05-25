@@ -24,7 +24,9 @@ class DataKaryawanController extends Controller
         //
         $no_hp = Auth::user()->no_hp; // Mengambil pengguna yang sedang login
         $data_pribadi = data_pribadi::where('no_hp', $no_hp)->first();
-        return view('data_karyawan.index')->with('data_pribadi', $data_pribadi);
+        $data_keluarga_inti = data_keluarga_inti::where('data_pribadis_id', $data_pribadi->id)->get();
+        $bahasa_asing = bahasa_asing::where('data_pribadis_id', $data_pribadi->id)->first();
+        return view('data_karyawan.index')->with('data_pribadi', $data_pribadi)->with('data_keluarga_inti', $data_keluarga_inti)->with('bahasa_asing', $bahasa_asing);
     }
 
     /**

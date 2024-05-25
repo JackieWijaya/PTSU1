@@ -31,15 +31,80 @@ class DatabaseSeeder extends Seeder
         data_pribadi::query()->create([
             'nama_lengkap'        => 'HRD',
             'tanggal_lahir'       => '2012-12-12',
-            'jenis_kelamin'       => 'Laki-laki',
+            'jenis_kelamin'       => 'Laki-Laki',
             'tempat_lahir'        => '-',
             'alamat'              => '-',
             'pendidikan_terakhir' => '-',
             'no_hp'               => '081234567890',
-            'email'               => '-',
+            'email'               => 'hrd@gmail.com',
             'agama'               => '-',
             'golongan_darah'      => '-',
             'status'              => 'Diterima',
+        ]);
+
+        data_pribadi::query()->create([
+            'nama_lengkap'        => 'Jackie',
+            'tanggal_lahir'       => '2002-06-19',
+            'jenis_kelamin'       => 'Laki-Laki',
+            'tempat_lahir'        => 'Palembang',
+            'alamat'              => 'Jalan Abdul Rozak',
+            'pendidikan_terakhir' => 'SMA',
+            'no_hp'               => '081243485171',
+            'email'               => 'jackie@gmail.com',
+            'agama'               => 'Buddha',
+            'golongan_darah'      => 'A',
+        ]);
+
+        data_pribadi::query()->create([
+            'nama_lengkap'        => 'Budi',
+            'tanggal_lahir'       => '2002-12-12',
+            'jenis_kelamin'       => 'Laki-Laki',
+            'tempat_lahir'        => 'Palembang',
+            'alamat'              => 'Jalan Mawar No. 1',
+            'pendidikan_terakhir' => 'SMA',
+            'no_hp'               => '082345678901',
+            'email'               => 'budi@gmail.com',
+            'agama'               => 'Islam',
+            'golongan_darah'      => 'B',
+        ]);
+
+        data_pribadi::query()->create([
+            'nama_lengkap'        => 'Dewi',
+            'tanggal_lahir'       => '2002-06-12',
+            'jenis_kelamin'       => 'Perempuan',
+            'tempat_lahir'        => 'Palembang',
+            'alamat'              => 'Jalan Anggrek Lr. Damai No. 126',
+            'pendidikan_terakhir' => 'S1',
+            'no_hp'               => '083456789012',
+            'email'               => 'dewi@gmail.com',
+            'agama'               => 'Islam',
+            'golongan_darah'      => 'O',
+        ]);
+
+        data_pribadi::query()->create([
+            'nama_lengkap'        => 'Yanto',
+            'tanggal_lahir'       => '2002-02-7',
+            'jenis_kelamin'       => 'Laki-Laki',
+            'tempat_lahir'        => 'Palembang',
+            'alamat'              => 'Jalan Abdul Rozak No. 126',
+            'pendidikan_terakhir' => 'S1',
+            'no_hp'               => '084567890123',
+            'email'               => 'yanto@gmail.com',
+            'agama'               => 'Islam',
+            'golongan_darah'      => 'A',
+        ]);
+
+        data_pribadi::query()->create([
+            'nama_lengkap'        => 'Martin',
+            'tanggal_lahir'       => '2002-03-13',
+            'jenis_kelamin'       => 'Laki-Laki',
+            'tempat_lahir'        => 'Palembang',
+            'alamat'              => 'Jalan Anggrek Lr. Damai No. 16',
+            'pendidikan_terakhir' => 'S1',
+            'no_hp'               => '085678901234',
+            'email'               => 'dewi@gmail.com',
+            'agama'               => 'Islam',
+            'golongan_darah'      => 'A',
         ]);
 
         pengaturan_presensi::query()->create([

@@ -53,14 +53,24 @@ class PelatihanSertifikatController extends Controller
                 'nama_lembaga'    => 'required',
                 'jenis'           => 'required',
                 'mulai_pelatihan' => 'required',
-                'akhir_pelatihan' => 'required'
+                'akhir_pelatihan' => 'required',
+                'sertifikat'      => 'required|file|image|max:2000|mimes:jpg,jpeg,png,pdf'
             ],
             [
                 'nama_lembaga.required'    => 'Nama Lembaga Harus Diisi',
                 'jenis.required'           => 'Jenis Harus Diisi',
                 'mulai_pelatihan.required' => 'Tanggal Mulai Harus Diisi',
-                'akhir_pelatihan.required' => 'Tanggal Akhir Harus Diisi'
+                'akhir_pelatihan.required' => 'Tanggal Akhir Harus Diisi',
+                'sertifikat.required'      => 'Sertifikat Harus Diisi',
+                'sertifikat.file'          => 'Sertifikat Harus File',
+                'sertifikat.image'         => 'File Harus Foto',   
+                'sertifikat.mimes'         => 'Format Sertifikat Harus .jpg/.jpeg/.png/.pdf',
+                'sertifikat.max'           => 'Ukuran File Sertifikat Tidak Boleh Lebih Dari 2 MB'
             ]);
+
+            $extsertifikat = $request->sertifikat->getClientOriginalExtension();
+            $sertifikat = "sertifikat-".time().".".$extsertifikat;
+            $request->sertifikat->storeAs('public/DataKaryawan',$sertifikat);
 
             $pelatihan_sertifikat = new pelatihan_sertifikat();
             $pelatihan_sertifikat->data_pribadis_id = $request->id;
@@ -68,11 +78,12 @@ class PelatihanSertifikatController extends Controller
             $pelatihan_sertifikat->jenis            = $validateData['jenis'];
             $pelatihan_sertifikat->mulai            = $validateData['mulai_pelatihan'];
             $pelatihan_sertifikat->akhir            = $validateData['akhir_pelatihan'];
+            $pelatihan_sertifikat->sertifikat       = $sertifikat;
             $pelatihan_sertifikat->status_isi       = $status_isi;
             $pelatihan_sertifikat->save();
 
             Alert::success('Data Tersimpan', "Terima Kasih Sudah Mengisi Data");
-            return redirect()->route('pengalaman_kerja.index');
+            return redirect()->route('pelatihan_sertifikat.index');
         }
     }
 

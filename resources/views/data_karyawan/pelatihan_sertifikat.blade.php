@@ -144,6 +144,20 @@
                                             <div class="text-danger">{{ $message }}</div>
                                         @enderror
                                     </div>
+                                    <div class="form-group col-lg-12 col-md-12 col-sm-12">
+                                        <label for="sertifikat">Sertifikat / File Bukti</label>
+                                        <input type="file"
+                                            class="form-control @error('sertifikat') is-invalid @enderror" id="sertifikat"
+                                            name="sertifikat" value="{{ old('sertifikat') }}"
+                                            placeholder="Enter Sertifikat">
+                                        @if (!$errors->has('sertifikat'))
+                                            <p>*Ukuran File Maks 800 KB | Format .jpg, .jpeg, .png, atau .pdf</p>
+                                        @endif
+
+                                        @error('sertifikat')
+                                            <div class="text-danger">{{ $message }}</div>
+                                        @enderror
+                                    </div>
                                 @else
                                     @foreach ($pelatihan_sertifikat as $item)
                                         <div class="form-group col-lg-3 col-md-6 col-sm-12">
@@ -193,6 +207,21 @@
                                                 placeholder="Enter Akhir" disabled>
 
                                             @error('akhir_pelatihan')
+                                                <div class="text-danger">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+
+                                        <div class="form-group col-lg-12 col-md-12 col-sm-12">
+                                            <label for="sertifikat">Sertifikat / File Bukti</label>
+                                            <input type="file"
+                                                class="form-control @error('sertifikat') is-invalid @enderror"
+                                                id="sertifikat" name="sertifikat" value="{{ $item->sertifikat }}"
+                                                placeholder="Enter Sertifikat" disabled>
+                                            @if (!$errors->has('sertifikat'))
+                                                <p>*Ukuran File Maks 2 MB | Format .jpg, .jpeg, .png, atau .pdf</p>
+                                            @endif
+
+                                            @error('sertifikat')
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
                                         </div>

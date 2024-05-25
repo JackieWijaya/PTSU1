@@ -186,13 +186,14 @@
                         break;
                 }
 
+                console.log(buku_nikah);
                 let buku_nikah_text;
-                if (buku_nikah === '-') {
+                if (buku_nikah === '-' || buku_nikah === '') {
                     buku_nikah_text = '-';
                 } else {
                     // Jika buku nikah bukan "-"
                     buku_nikah_text =
-                        `<a href="/storage/BukuNikah/${buku_nikah}">${buku_nikah}</a>`;
+                        `<a href="/storage/BukuNikah/${buku_nikah}">Lihat</a>`;
                 }
 
                 // Menetapkan status teks dan tampilannya berdasarkan nilai status

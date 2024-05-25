@@ -18,7 +18,11 @@ class DataPelamarController extends Controller
     public function index()
     {
         //
-        $data_pribadis = data_pribadi::all();
+        // $data_pribadis = data_pribadi::all();
+        // Ambil semua data pribadi yang tidak memiliki role 'HRD' langsung dari database
+        $data_pribadis = data_pribadi::where('nama_lengkap', '!=', 'HRD')->get();
+        // dd($data_pribadis);
+
         return view('data_pelamar.index')->with('data_pribadis', $data_pribadis);
 
     }

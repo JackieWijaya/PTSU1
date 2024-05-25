@@ -227,13 +227,12 @@ class DataPribadiController extends Controller
         $data_pribadi->status_isi           = $status_isi;
         $data_pribadi->update();
 
-        if($data_pribadi->status_isi == '1') {
+        if($data_pribadi->status_isi == '1' && $data_pribadi->status_kawin == 'TK') {
             Alert::success('Data Tersimpan', "Terima Kasih Sudah Mengisi Data");
-            return redirect('data_keluarga_inti');
+            return redirect('data_keluarga_kandung');
         } else {
             Alert::success('Data Tersimpan', "Terima Kasih Sudah Mengisi Data");
-            return redirect()->route('data_karyawan.index');
-            // return redirect()->back();
+            return redirect('data_keluarga_inti');
         }
     }
 

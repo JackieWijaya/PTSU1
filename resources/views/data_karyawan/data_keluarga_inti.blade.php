@@ -97,7 +97,7 @@
                                         <small class="text-muted">(Isi 0 Jika Belum Ada)</small>
                                         <input type="text" class="form-control @error('nik_inti') is-invalid @enderror"
                                             name="nik_inti" id="nik_inti" value="{{ old('nik_inti') }}"
-                                            placeholder="Enter NIK">
+                                            placeholder="Enter NIK" @disabled($data_pribadi->status_kawin == 'TK')>
 
                                         @error('nik_inti')
                                             <div class="text-danger">{{ $message }}</div>
@@ -107,7 +107,8 @@
                                     <div class="form-group col-lg-3 col-md-6 col-sm-12">
                                         <label for="status_keluarga_inti">Status Keluarga</label>
                                         <select name="status_keluarga_inti" id="status_keluarga_inti"
-                                            class="form-control @error('status_keluarga_inti') is-invalid @enderror">
+                                            class="form-control @error('status_keluarga_inti') is-invalid @enderror"
+                                            @disabled($data_pribadi->status_kawin == 'TK')>
                                             <option value="">-- Pilih Status Keluarga --</option>
                                             <option
                                                 value="Istri"{{ old('status_keluarga_inti') == 'Istri' ? 'selected' : '' }}>
@@ -133,7 +134,7 @@
                                             class="form-control @error('nama_anggota_keluarga_inti') is-invalid @enderror"
                                             name="nama_anggota_keluarga_inti" id="nama_anggota_keluarga_inti"
                                             value="{{ old('nama_anggota_keluarga_inti') }}"
-                                            placeholder="Enter Nama Anggota Keluarga">
+                                            placeholder="Enter Nama Anggota Keluarga" @disabled($data_pribadi->status_kawin == 'TK')>
 
                                         @error('nama_anggota_keluarga_inti')
                                             <div class="text-danger">{{ $message }}</div>
@@ -145,7 +146,8 @@
                                         <input type="text"
                                             class="form-control @error('tempat_lahir_inti') is-invalid @enderror"
                                             name="tempat_lahir_inti" id="tempat_lahir_inti"
-                                            value="{{ old('tempat_lahir_inti') }}" placeholder="Enter Tempat Lahir">
+                                            value="{{ old('tempat_lahir_inti') }}" placeholder="Enter Tempat Lahir"
+                                            @disabled($data_pribadi->status_kawin == 'TK')>
 
                                         @error('tempat_lahir_inti')
                                             <div class="text-danger">{{ $message }}</div>
@@ -158,7 +160,7 @@
                                             class="form-control @error('tanggal_lahir_inti') is-invalid @enderror"
                                             name="tanggal_lahir_inti"
                                             id="tanggal_lahir_inti"value="{{ old('tanggal_lahir_inti') }}"
-                                            placeholder="Enter Tanggal Lahir">
+                                            placeholder="Enter Tanggal Lahir" @disabled($data_pribadi->status_kawin == 'TK')>
 
                                         @error('tanggal_lahir_inti')
                                             <div class="text-danger">{{ $message }}</div>
@@ -168,7 +170,8 @@
                                     <div class="form-group col-lg-4 col-md-6 col-sm-12">
                                         <label for="pendidikan_inti">Pendidikan</label>
                                         <select name="pendidikan_inti" id="pendidikan_inti"
-                                            class="form-control @error('pendidikan_inti') is-invalid @enderror">
+                                            class="form-control @error('pendidikan_inti') is-invalid @enderror"
+                                            @disabled($data_pribadi->status_kawin == 'TK')>
                                             <option value="">-- Pilih Pendidikan --</option>
                                             <option
                                                 value="Belum Sekolah"{{ old('pendidikan_inti') == 'Belum Sekolah' ? 'selected' : '' }}>
@@ -205,7 +208,8 @@
                                         <input type="text"
                                             class="form-control @error('pekerjaan_inti') is-invalid @enderror"
                                             name="pekerjaan_inti" id="pekerjaan_inti"
-                                            value="{{ old('pekerjaan_inti') }}" placeholder="Enter Pekerjaan">
+                                            value="{{ old('pekerjaan_inti') }}" placeholder="Enter Pekerjaan"
+                                            @disabled($data_pribadi->status_kawin == 'TK')>
                                         @if (!$errors->has('pekerjaan_inti'))
                                             <p>*Jika Tidak Berkerja Isi Siswa Untuk SD - SMA | Isi Mahasiswa Untuk D3 - S2
                                             </p>
@@ -221,7 +225,7 @@
                                         <input type="file"
                                             class="form-control @error('ktp_pasangan') is-invalid @enderror"
                                             id="ktp_pasangan" name="ktp_pasangan" value="{{ old('ktp_pasangan') }}"
-                                            placeholder="Enter KTP Pasangan">
+                                            placeholder="Enter KTP Pasangan" @disabled($data_pribadi->status_kawin == 'TK')>
                                         @if (!$errors->has('ktp_pasangan'))
                                             <p>*Ukuran File Maks 800 KB | Format .jpg, .jpeg, atau .png</p>
                                         @endif
@@ -382,7 +386,9 @@
 
                             <div class="form-check ml-1">
                                 <input class="form-check-input" type="checkbox" id="checkbox"
-                                    @disabled($data_keluarga_inti_status && $data_keluarga_inti_status->status_isi == '1')>
+                                    @disabled(
+                                        ($data_keluarga_inti_status && $data_keluarga_inti_status->status_isi == '1') ||
+                                            $data_pribadi->status_kawin == 'TK')>
                                 <label class="form-check-label"><small class="text-bold">Dengan melakukan centang anda
                                         dengan
                                         kesadaran penuh bertanggung jawab atas keaslian data yang disimpan</small></label>
@@ -393,11 +399,15 @@
                             </div>
                             <div class="mt-2">
                                 <button type="submit" class="btn btn-primary" name="status_isi" value="0"
-                                    onclick="setRequired(true)" @disabled($data_keluarga_inti_status && $data_keluarga_inti_status->status_isi == '1')>Tambah
+                                    onclick="setRequired(true)" @disabled(
+                                        ($data_keluarga_inti_status && $data_keluarga_inti_status->status_isi == '1') ||
+                                            $data_pribadi->status_kawin == 'TK')>Tambah
                                     Data Lainnya</button>
                                 <button type="button" class="btn btn-primary" data-toggle="modal"
                                     data-target="#yakinModal" onclick="setRequired(false)"
-                                    @disabled($data_keluarga_inti_status && $data_keluarga_inti_status->status_isi == '1')>Next</button>
+                                    @disabled(
+                                        ($data_keluarga_inti_status && $data_keluarga_inti_status->status_isi == '1') ||
+                                            $data_pribadi->status_kawin == 'TK')>Next</button>
                             </div>
                             @include('data_karyawan.modal')
 
