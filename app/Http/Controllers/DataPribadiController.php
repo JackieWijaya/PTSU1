@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class DataPribadiController extends Controller
 {
@@ -133,8 +134,28 @@ class DataPribadiController extends Controller
     public function update(Request $request, data_pribadi $data_pribadi)
     {
         //
+        // Set default value for $tanggal_nikah
+        $tanggal_nikah = $request->input('tanggal_nikah');
+
+        // Check if the value is empty or '-'
+        if(empty($tanggal_nikah) || $tanggal_nikah == '-') {
+            $tanggal_nikah = null; // Set to null if empty or '-'
+        }
+
         // 1. Validasi
         $validateData = $request->validate([
+            'nama_lengkap'         => 'required', 
+            'jenis_kelamin'        => 'required', 
+            'tanggal_lahir'        => 'required', 
+            'tempat_lahir'         => 'required', 
+            'no_hp'                => 'required|numeric|gt:-1',
+            'email'                => 'required|email',
+            'alamat'               => 'required', 
+            'pendidikan_terakhir'  => 'required', 
+            'agama'                => 'required', 
+            'golongan_darah'       => 'required', 
+            'status_kawin'         => 'required',
+            'buku_nikah'           => 'image|max:800|mimes:jpg,jpeg,png',
             'nik_pribadi'          => 'required|numeric|gt:-1',
             'ktp'                  => 'required|image|max:800|mimes:jpg,jpeg,png',
             'rekening'             => 'image|max:800|mimes:jpg,jpeg,png',
@@ -143,86 +164,162 @@ class DataPribadiController extends Controller
             'bpjs_ketenagakerjaan' => 'image|max:800|mimes:jpg,jpeg,png',
             'bpjs_kesehatan'       => 'image|max:800|mimes:jpg,jpeg,png',
             'npwp'                 => 'image|max:800|mimes:jpg,jpeg,png'
-            ],
+        ],
         [
-            'nik_pribadi.required'       => 'NIK Harus Diisi',
-            'nik_pribadi.numeric'        => 'NIK Harus Angka',
-            'nik_pribadi.gt'             => 'NIK Tidak Boleh Min',
-            'ktp.required'               => 'KTP Harus Diisi',
-            'ktp.image'                  => 'File Harus Foto',   
-            'ktp.mimes'                  => 'Format Harus .jpg/.jpeg/.png',
-            'ktp.max'                    => 'Ukuran File Tidak Boleh Lebih Dari 800 KB',
-            'rekening.image'             => 'File Harus Foto',   
-            'rekening.mimes'             => 'Format Harus .jpg/.jpeg/.png',
-            'rekening.max'               => 'Ukuran File Tidak Boleh Lebih Dari 800 KB',
-            'sim.image'                  => 'File Harus Foto',   
-            'sim.mimes'                  => 'Format Harus .jpg/.jpeg/.png',
-            'sim.max'                    => 'Ukuran File Tidak Boleh Lebih Dari 800 KB',
-            'kk.required'                => 'KK Harus Diisi',
-            'kk.image'                   => 'File Harus Foto',   
-            'kk.mimes'                   => 'Format Harus .jpg/.jpeg/.png',
-            'kk.max'                     => 'Ukuran File Tidak Boleh Lebih Dari 800 KB',
-            'bpjs_ketenagakerjaan.image' => 'File Harus Foto',   
-            'bpjs_ketenagakerjaan.mimes' => 'Format Harus .jpg/.jpeg/.png',
-            'bpjs_ketenagakerjaan.max'   => 'Ukuran File Tidak Boleh Lebih Dari 800 KB',
-            'bpjs_kesehatan.image'       => 'File Harus Foto',   
-            'bpjs_kesehatan.mimes'       => 'Format Harus .jpg/.jpeg/.png',
-            'bpjs_kesehatan.max'         => 'Ukuran File Tidak Boleh Lebih Dari 800 KB',
-            'npwp.image'                 => 'File Harus Foto',   
-            'npwp.mimes'                 => 'Format Harus .jpg/.jpeg/.png',
-            'npwp.max'                   => 'Ukuran File Tidak Boleh Lebih Dari 800 KB'
+            'nama_lengkap.required'        => 'Nama Harus Diisi',
+            'jenis_kelamin.required'       => 'Pilih Jenis Kelamin',
+            'tanggal_lahir'                => 'Tanggal Lahir Harus Diisi',
+            'tempat_lahir.required'        => 'Tempat Lahir Harus Diisi',
+            'no_hp.required'               => 'No HP Harus Diisi',
+            'no_hp.numeric'                => 'No HP Harus Angka',
+            'email.required'               => 'Email Harus Diisi',
+            'email.email'                  => 'Isi Dengan Email',
+            'alamat.required'              => 'Alamat Harus Diisi',
+            'pendidikan_terakhir.required' => 'Pilih Pendidikan Terakhir',
+            'agama.required'               => 'Pilih Agama',
+            'golongan_darah.required'      => 'Pilih Golongan Darah',
+            'status_kawin.required'        => 'Pilih Status Kawin',
+            'buku_nikah.image'             => 'File Harus Foto',   
+            'buku_nikah.mimes'             => 'Format Harus .jpg/.jpeg/.png',
+            'buku_nikah.max'               => 'Ukuran File Tidak Boleh Lebih Dari 800 KB',
+            'nik_pribadi.required'         => 'NIK Harus Diisi',
+            'nik_pribadi.numeric'          => 'NIK Harus Angka',
+            'nik_pribadi.gt'               => 'NIK Tidak Boleh Min',
+            'ktp.required'                 => 'KTP Harus Diisi',
+            'ktp.image'                    => 'File Harus Foto',   
+            'ktp.mimes'                    => 'Format Harus .jpg/.jpeg/.png',
+            'ktp.max'                      => 'Ukuran File Tidak Boleh Lebih Dari 800 KB',
+            'rekening.image'               => 'File Harus Foto',   
+            'rekening.mimes'               => 'Format Harus .jpg/.jpeg/.png',
+            'rekening.max'                 => 'Ukuran File Tidak Boleh Lebih Dari 800 KB',
+            'sim.image'                    => 'File Harus Foto',   
+            'sim.mimes'                    => 'Format Harus .jpg/.jpeg/.png',
+            'sim.max'                      => 'Ukuran File Tidak Boleh Lebih Dari 800 KB',
+            'kk.required'                  => 'KK Harus Diisi',
+            'kk.image'                     => 'File Harus Foto',   
+            'kk.mimes'                     => 'Format Harus .jpg/.jpeg/.png',
+            'kk.max'                       => 'Ukuran File Tidak Boleh Lebih Dari 800 KB',
+            'bpjs_ketenagakerjaan.image'   => 'File Harus Foto',   
+            'bpjs_ketenagakerjaan.mimes'   => 'Format Harus .jpg/.jpeg/.png',
+            'bpjs_ketenagakerjaan.max'     => 'Ukuran File Tidak Boleh Lebih Dari 800 KB',
+            'bpjs_kesehatan.image'         => 'File Harus Foto',   
+            'bpjs_kesehatan.mimes'         => 'Format Harus .jpg/.jpeg/.png',
+            'bpjs_kesehatan.max'           => 'Ukuran File Tidak Boleh Lebih Dari 800 KB',
+            'npwp.image'                   => 'File Harus Foto',   
+            'npwp.mimes'                   => 'Format Harus .jpg/.jpeg/.png',
+            'npwp.max'                     => 'Ukuran File Tidak Boleh Lebih Dari 800 KB'
         ]);
 
-        $extktp = $request->ktp->getClientOriginalExtension();
-        $extkk = $request->kk->getClientOriginalExtension();
+        if($request->hasFile('buku_nikah')){
+            $nama_buku_nikah_lama = $data_pribadi->buku_nikah;
+            Storage::delete(['public/BukuNikah/'.$nama_buku_nikah_lama]);
+            $extbuku_nikah = $request->buku_nikah->getClientOriginalExtension();
+            $nama_buku_nikah_baru = "buku_nikah-".time().".".$extbuku_nikah;
+            $request->buku_nikah->storeAs('public/BukuNikah',$nama_buku_nikah_baru);
+        } else {
+            $validateData['buku_nikah'] = $data_pribadi->buku_nikah;
+            $nama_buku_nikah_baru = $validateData['buku_nikah'];
+        }
 
-        $ktp = "ktp-".time().".".$extktp;
-        $request->ktp->storeAs('public/DataKaryawan',$ktp);
-        
-        $kk = "kk-".time().".".$extkk;
-        $request->kk->storeAs('public/DataKaryawan',$kk);
+        if($request->hasFile('ktp')){
+            $nama_ktp_lama = $data_pribadi->ktp;
+            Storage::delete(['public/DataKaryawan/'.$nama_ktp_lama]);
+            $extktp = $request->ktp->getClientOriginalExtension();
+            $nama_ktp_baru = "ktp-".time().".".$extktp;
+            $request->ktp->storeAs('public/DataKaryawan',$nama_ktp_baru);
+        } else {
+            $validateData['ktp'] = $data_pribadi->ktp;
+            $nama_ktp_baru = $validateData['ktp'];
+        }
 
-        $rekening = '-';
-        $sim = '-';
-        $bpjs_ketenagakerjaan = '-';
-        $bpjs_kesehatan = '-';
-        $npwp = '-';
+        if($request->hasFile('kk')){
+            $nama_kk_lama = $data_pribadi->kk;
+            Storage::delete(['public/DataKaryawan/'.$nama_kk_lama]);
+            $extkk = $request->kk->getClientOriginalExtension();
+            $nama_kk_baru = "kk-".time().".".$extkk;
+            $request->kk->storeAs('public/DataKaryawan',$nama_kk_baru);
+        } else {
+            $validateData['kk'] = $data_pribadi->kk;
+            $nama_kk_baru = $validateData['kk'];
+        }
 
         if($request->hasFile('rekening')){
+            $nama_rekening_lama = $data_pribadi->rekening;
+            Storage::delete(['public/DataKaryawan/'.$nama_rekening_lama]);
             $extrekening = $request->rekening->getClientOriginalExtension();
-            $rekening = "rekening-".time().".".$extrekening;
-            $request->rekening->storeAs('public/DataKaryawan',$rekening);
+            $nama_rekening_baru = "rekening-".time().".".$extrekening;
+            $request->rekening->storeAs('public/DataKaryawan',$nama_rekening_baru);
+        } else {
+            $validateData['rekening'] = $data_pribadi->rekening;
+            $nama_rekening_baru = $validateData['rekening'];
         }
+
         if($request->hasFile('sim')){
+            $nama_sim_lama = $data_pribadi->sim;
+            Storage::delete(['public/DataKaryawan/'.$nama_sim_lama]);
             $extsim = $request->sim->getClientOriginalExtension();
-            $sim = "sim-".time().".".$extsim;
-            $request->sim->storeAs('public/DataKaryawan',$sim);
+            $nama_sim_baru = "sim-".time().".".$extsim;
+            $request->sim->storeAs('public/DataKaryawan',$nama_sim_baru);
+        } else {
+            $validateData['sim'] = $data_pribadi->sim;
+            $nama_sim_baru = $validateData['sim'];
         }
+
         if($request->hasFile('bpjs_ketenagakerjaan')){
+            $nama_bpjs_ketenagakerjaan_lama = $data_pribadi->bpjs_ketenagakerjaan;
+            Storage::delete(['public/DataKaryawan/'.$nama_bpjs_ketenagakerjaan_lama]);
             $extbpjsketenagakerjaan = $request->bpjs_ketenagakerjaan->getClientOriginalExtension();
-            $bpjs_ketenagakerjaan = "bpjs_ketenagakerjaan-".time().".".$extbpjsketenagakerjaan;
-            $request->bpjs_ketenagakerjaan->storeAs('public/DataKaryawan',$bpjs_ketenagakerjaan);
+            $nama_bpjs_ketenagakerjaan_baru = "bpjs_ketenagakerjaan-".time().".".$extbpjsketenagakerjaan;
+            $request->bpjs_ketenagakerjaan->storeAs('public/DataKaryawan',$nama_bpjs_ketenagakerjaan_baru);
+        } else {
+            $validateData['bpjs_ketenagakerjaan'] = $data_pribadi->bpjs_ketenagakerjaan;
+            $nama_bpjs_ketenagakerjaan_baru = $validateData['bpjs_ketenagakerjaan'];
         }
+
         if($request->hasFile('bpjs_kesehatan')){
+            $nama_bpjs_kesehatan_lama = $data_pribadi->bpjs_kesehatan;
+            Storage::delete(['public/DataKaryawan/'.$nama_bpjs_kesehatan_lama]);
             $extbpjskesehatan = $request->bpjs_kesehatan->getClientOriginalExtension();
-            $bpjs_kesehatan = "bpjs_kesehatan-".time().".".$extbpjskesehatan;
-            $request->bpjs_kesehatan->storeAs('public/DataKaryawan',$bpjs_kesehatan);
+            $nama_bpjs_kesehatan_baru = "bpjs_kesehatan-".time().".".$extbpjskesehatan;
+            $request->bpjs_kesehatan->storeAs('public/DataKaryawan',$nama_bpjs_kesehatan_baru);
+        } else {
+            $validateData['bpjs_kesehatan'] = $data_pribadi->bpjs_kesehatan;
+            $nama_bpjs_kesehatan_baru = $validateData['bpjs_kesehatan'];
         }
+
         if($request->hasFile('npwp')){
+            $nama_npwp_lama = $data_pribadi->npwp;
+            Storage::delete(['public/DataKaryawan/'.$nama_npwp_lama]);
             $extnpwp = $request->npwp->getClientOriginalExtension();
-            $npwp = "npwp-".time().".".$extnpwp;
-            $request->npwp->storeAs('public/DataKaryawan',$npwp);
+            $nama_npwp_baru = "npwp-".time().".".$extnpwp;
+            $request->npwp->storeAs('public/DataKaryawan',$nama_npwp_baru);
+        } else {
+            $validateData['npwp'] = $data_pribadi->npwp;
+            $nama_npwp_baru = $validateData['npwp'];
         }
 
         $status_isi = $request->input('status_isi');
         // $data_pribadi = data_pribadi::findOrFail($request->id);
-        $data_pribadi->ktp                  = $ktp;
-        $data_pribadi->rekening             = $rekening;    
-        $data_pribadi->sim                  = $sim;
-        $data_pribadi->kk                   = $kk;
-        $data_pribadi->bpjs_ketenagakerjaan = $bpjs_ketenagakerjaan;
-        $data_pribadi->bpjs_kesehatan       = $bpjs_kesehatan;
-        $data_pribadi->npwp                 = $npwp;
+        $data_pribadi->nama_lengkap         = $validateData['nama_lengkap'];
+        $data_pribadi->jenis_kelamin        = $validateData['jenis_kelamin'];
+        $data_pribadi->tanggal_lahir        = $validateData['tanggal_lahir'];
+        $data_pribadi->tempat_lahir         = $validateData['tempat_lahir'];
+        $data_pribadi->no_hp                = $validateData['no_hp'];
+        $data_pribadi->email                = $validateData['email'];
+        $data_pribadi->alamat               = $validateData['alamat'];
+        $data_pribadi->pendidikan_terakhir  = $validateData['pendidikan_terakhir'];
+        $data_pribadi->agama                = $validateData['agama'];
+        $data_pribadi->golongan_darah       = $validateData['golongan_darah'];
+        $data_pribadi->status_kawin         = $validateData['status_kawin'];
+        $data_pribadi->tanggal_nikah        = $tanggal_nikah;
+        $data_pribadi->buku_nikah           = $nama_buku_nikah_baru;
+        $data_pribadi->ktp                  = $nama_ktp_baru;
+        $data_pribadi->rekening             = $nama_rekening_baru;    
+        $data_pribadi->sim                  = $nama_sim_baru;
+        $data_pribadi->kk                   = $nama_kk_baru;
+        $data_pribadi->bpjs_ketenagakerjaan = $nama_bpjs_ketenagakerjaan_baru;
+        $data_pribadi->bpjs_kesehatan       = $nama_bpjs_kesehatan_baru;
+        $data_pribadi->npwp                 = $nama_npwp_baru;
         $data_pribadi->nik                  = $validateData['nik_pribadi'];
         $data_pribadi->status_isi           = $status_isi;
         $data_pribadi->update();

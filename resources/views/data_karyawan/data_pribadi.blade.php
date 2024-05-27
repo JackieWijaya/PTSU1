@@ -95,7 +95,7 @@
                                                 class="form-control @error('nama_lengkap') is-invalid @enderror"
                                                 name="nama_lengkap" id="nama_lengkap"
                                                 value="{{ $data_pribadi->nama_lengkap }}" placeholder="Enter Nama Lengkap"
-                                                disabled>
+                                                @disabled($data_pribadi && $data_pribadi->status_isi == '1')>
 
                                             @error('nama_lengkap')
                                                 <div class="text-danger">{{ $message }}</div>
@@ -105,7 +105,8 @@
                                         <div class="form-group col-lg-3 col-md-6 col-sm-12">
                                             <label for="jenis_kelamin">Jenis Kelamin</label>
                                             <select name="jenis_kelamin" id="jenis_kelamin"
-                                                class="form-control @error('jenis_kelamin') is-invalid @enderror" disabled>
+                                                class="form-control @error('jenis_kelamin') is-invalid @enderror"
+                                                @disabled($data_pribadi && $data_pribadi->status_isi == '1')>
                                                 <option value="">-- Pilih Jenis Kelamin --</option>
                                                 <option
                                                     value="Laki-Laki"{{ $data_pribadi->jenis_kelamin == 'Laki-Laki' ? 'selected' : '' }}>
@@ -126,9 +127,9 @@
                                             <label for="tanggal_lahir">Tanggal Lahir</label>
                                             <input type="date"
                                                 class="form-control @error('tanggal_lahir') is-invalid @enderror"
-                                                name="tanggal_lahir"
-                                                id="tanggal_lahir"value="{{ $data_pribadi->tanggal_lahir }}"
-                                                placeholder="Enter Tanggal Lahir" disabled>
+                                                name="tanggal_lahir" id="tanggal_lahir"
+                                                @if (!$data_pribadi || $data_pribadi->tanggal_lahir == null) value="{{ old('tanggal_lahir') }}" @else value="{{ $data_pribadi->tanggal_lahir }}" @endif
+                                                placeholder="Enter Tanggal Lahir" @disabled($data_pribadi && $data_pribadi->status_isi == '1')>
 
                                             @error('tanggal_lahir')
                                                 <div class="text-danger">{{ $message }}</div>
@@ -140,8 +141,8 @@
                                             <input type="text"
                                                 class="form-control @error('tempat_lahir') is-invalid @enderror"
                                                 name="tempat_lahir" id="tempat_lahir"
-                                                value="{{ $data_pribadi->tempat_lahir }}" placeholder="Enter Tempat Lahir"
-                                                disabled>
+                                                @if (!$data_pribadi || $data_pribadi->tempat_lahir == '-') value="{{ old('tempat_lahir') }}" @else value="{{ $data_pribadi->tempat_lahir }}" @endif
+                                                placeholder="Enter Tempat Lahir" @disabled($data_pribadi && $data_pribadi->status_isi == '1')>
 
                                             @error('tempat_lahir')
                                                 <div class="text-danger">{{ $message }}</div>
@@ -157,7 +158,7 @@
                                                 <input type="text"
                                                     class="form-control @error('no_hp') is-invalid @enderror"
                                                     name="no_hp" id="no_hp" value="{{ $data_pribadi->no_hp }}"
-                                                    placeholder="0812 3456 7890" disabled>
+                                                    placeholder="0812 3456 7890" @disabled($data_pribadi && $data_pribadi->status_isi == '1')>
                                             </div>
 
                                             @error('no_hp')
@@ -173,8 +174,9 @@
                                                 </div>
                                                 <input type="email"
                                                     class="form-control @error('email') is-invalid @enderror"
-                                                    name="email" id="email" value="{{ $data_pribadi->email }}"
-                                                    placeholder="example@gmail.com" disabled>
+                                                    name="email" id="email"
+                                                    @if (!$data_pribadi || $data_pribadi->email == '-') value="{{ old('email') }}" @else value="{{ $data_pribadi->email }}" @endif
+                                                    placeholder="example@gmail.com" @disabled($data_pribadi && $data_pribadi->status_isi == '1')>
                                             </div>
                                             @error('email')
                                                 <div class="text-danger">{{ $message }}</div>
@@ -185,8 +187,9 @@
                                             <label for="alamat">Alamat</label>
                                             <input type="text"
                                                 class="form-control @error('alamat') is-invalid @enderror" name="alamat"
-                                                id="alamat" value="{{ $data_pribadi->alamat }}"
-                                                placeholder="Enter Alamat" disabled>
+                                                id="alamat"
+                                                @if (!$data_pribadi || $data_pribadi->alamat == '-') value="{{ old('alamat') }}" @else value="{{ $data_pribadi->alamat }}" @endif
+                                                placeholder="Enter Alamat" @disabled($data_pribadi && $data_pribadi->status_isi == '1')>
 
                                             @error('alamat')
                                                 <div class="text-danger">{{ $message }}</div>
@@ -197,33 +200,46 @@
                                             <label for="pendidikan_terakhir">Pendidikan Terakhir</label>
                                             <select name="pendidikan_terakhir" id="pendidikan_terakhir"
                                                 class="form-control @error('pendidikan_terakhir') is-invalid @enderror"
-                                                disabled>
+                                                @disabled($data_pribadi && $data_pribadi->status_isi == '1')>
                                                 <option value="">-- Pilih Pendidikan Terakhir --</option>
-                                                <option
-                                                    value="SD"{{ $data_pribadi->pendidikan_terakhir == 'SD' ? 'selected' : '' }}>
+                                                <option value="SD" @if (
+                                                    ($data_pribadi && $data_pribadi->pendidikan_terakhir == 'SD') ||
+                                                        (!$data_pribadi && old('pendidikan_terakhir') == 'SD') ||
+                                                        ($data_pribadi && $data_pribadi->pendidikan_terakhir == '-' && old('pendidikan_terakhir') == 'SD')) selected @endif>
                                                     SD
                                                 </option>
-                                                <option
-                                                    value="SMP"{{ $data_pribadi->pendidikan_terakhir == 'SMP' ? 'selected' : '' }}>
+                                                <option value="SMP" @if (
+                                                    ($data_pribadi && $data_pribadi->pendidikan_terakhir == 'SMP') ||
+                                                        (!$data_pribadi && old('pendidikan_terakhir') == 'SMP') ||
+                                                        ($data_pribadi && $data_pribadi->pendidikan_terakhir == '-' && old('pendidikan_terakhir') == 'SMP')) selected @endif>
                                                     SMP
                                                 </option>
-                                                <option
-                                                    value="SMA"{{ $data_pribadi->pendidikan_terakhir == 'SMA' ? 'selected' : '' }}>
+                                                <option value="SMA" @if (
+                                                    ($data_pribadi && $data_pribadi->pendidikan_terakhir == 'SMA') ||
+                                                        (!$data_pribadi && old('pendidikan_terakhir') == 'SMA') ||
+                                                        ($data_pribadi && $data_pribadi->pendidikan_terakhir == '-' && old('pendidikan_terakhir') == 'SMA')) selected @endif>
                                                     SMA
                                                 </option>
-                                                <option
-                                                    value="D3"{{ $data_pribadi->pendidikan_terakhir == 'D3' ? 'selected' : '' }}>
+                                                <option value="D3" @if (
+                                                    ($data_pribadi && $data_pribadi->pendidikan_terakhir == 'D3') ||
+                                                        (!$data_pribadi && old('pendidikan_terakhir') == 'D3') ||
+                                                        ($data_pribadi && $data_pribadi->pendidikan_terakhir == '-' && old('pendidikan_terakhir') == 'D3')) selected @endif>
                                                     D3
                                                 </option>
-                                                <option
-                                                    value="S1"{{ $data_pribadi->pendidikan_terakhir == 'S1' ? 'selected' : '' }}>
+                                                <option value="S1" @if (
+                                                    ($data_pribadi && $data_pribadi->pendidikan_terakhir == 'S1') ||
+                                                        (!$data_pribadi && old('pendidikan_terakhir') == 'S1') ||
+                                                        ($data_pribadi && $data_pribadi->pendidikan_terakhir == '-' && old('pendidikan_terakhir') == 'S1')) selected @endif>
                                                     S1
                                                 </option>
-                                                <option
-                                                    value="S2"{{ $data_pribadi->pendidikan_terakhir == 'S2' ? 'selected' : '' }}>
+                                                <option value="S2" @if (
+                                                    ($data_pribadi && $data_pribadi->pendidikan_terakhir == 'S2') ||
+                                                        (!$data_pribadi && old('pendidikan_terakhir') == 'S2') ||
+                                                        ($data_pribadi && $data_pribadi->pendidikan_terakhir == '-' && old('pendidikan_terakhir') == 'S2')) selected @endif>
                                                     S2
                                                 </option>
                                             </select>
+
 
                                             @error('pendidikan_terakhir')
                                                 <div class="text-danger">{{ $message }}</div>
@@ -233,30 +249,46 @@
                                         <div class="form-group col-lg-3 col-md-6 col-sm-12">
                                             <label for="agama">Agama</label>
                                             <select name="agama" id="agama"
-                                                class="form-control @error('agama') is-invalid @enderror" disabled>
+                                                class="form-control @error('agama') is-invalid @enderror"
+                                                @disabled($data_pribadi && $data_pribadi->status_isi == '1')>
                                                 <option value="">-- Pilih Agama --</option>
-                                                <option
-                                                    value="Islam"{{ $data_pribadi->agama == 'Islam' ? 'selected' : '' }}>
+                                                <option value="Islam" @if (
+                                                    ($data_pribadi && $data_pribadi->agama == 'Islam') ||
+                                                        (!$data_pribadi && old('agama') == 'Islam') ||
+                                                        ($data_pribadi && $data_pribadi->agama == '-' && old('agama') == 'Islam')) selected @endif>
                                                     Islam
                                                 </option>
-                                                <option
-                                                    value="Kristen"{{ $data_pribadi->agama == 'Kristen' ? 'selected' : '' }}>
+                                                <option value="Kristen"
+                                                    @if (
+                                                        ($data_pribadi && $data_pribadi->agama == 'Kristen') ||
+                                                            (!$data_pribadi && old('agama') == 'Kristen') ||
+                                                            ($data_pribadi && $data_pribadi->agama == '-' && old('agama') == 'Kristen')) selected @endif>
                                                     Kristen
                                                 </option>
-                                                <option
-                                                    value="Katolik"{{ $data_pribadi->agama == 'Katolik' ? 'selected' : '' }}>
+                                                <option value="Katolik"
+                                                    @if (
+                                                        ($data_pribadi && $data_pribadi->agama == 'Katolik') ||
+                                                            (!$data_pribadi && old('agama') == 'Katolik') ||
+                                                            ($data_pribadi && $data_pribadi->agama == '-' && old('agama') == 'Katolik')) selected @endif>
                                                     Katolik
                                                 </option>
-                                                <option
-                                                    value="Hindu"{{ $data_pribadi->agama == 'Hindu' ? 'selected' : '' }}>
+                                                <option value="Hindu" @if (
+                                                    ($data_pribadi && $data_pribadi->agama == 'Hindu') ||
+                                                        (!$data_pribadi && old('agama') == 'Hindu') ||
+                                                        ($data_pribadi && $data_pribadi->agama == '-' && old('agama') == 'Hindu')) selected @endif>
                                                     Hindu
                                                 </option>
-                                                <option
-                                                    value="Buddha"{{ $data_pribadi->agama == 'Buddha' ? 'selected' : '' }}>
+                                                <option value="Buddha" @if (
+                                                    ($data_pribadi && $data_pribadi->agama == 'Buddha') ||
+                                                        (!$data_pribadi && old('agama') == 'Buddha') ||
+                                                        ($data_pribadi && $data_pribadi->agama == '-' && old('agama') == 'Buddha')) selected @endif>
                                                     Buddha
                                                 </option>
-                                                <option
-                                                    value="Konghucu"{{ $data_pribadi->agama == 'Konghucu' ? 'selected' : '' }}>
+                                                <option value="Konghucu"
+                                                    @if (
+                                                        ($data_pribadi && $data_pribadi->agama == 'Konghucu') ||
+                                                            (!$data_pribadi && old('agama') == 'Konghucu') ||
+                                                            ($data_pribadi && $data_pribadi->agama == '-' && old('agama') == 'Konghucu')) selected @endif>
                                                     Konghucu
                                                 </option>
                                             </select>
@@ -270,22 +302,30 @@
                                             <label for="golongan_darah">Golongan Darah</label>
                                             <select name="golongan_darah" id="golongan_darah"
                                                 class="form-control @error('golongan_darah') is-invalid @enderror"
-                                                disabled>
+                                                @disabled($data_pribadi && $data_pribadi->status_isi == '1')>
                                                 <option value="">-- Pilih Golongan Darah --</option>
-                                                <option
-                                                    value="A"{{ $data_pribadi->golongan_darah == 'A' ? 'selected' : '' }}>
+                                                <option value="A" @if (
+                                                    ($data_pribadi && $data_pribadi->golongan_darah == 'A') ||
+                                                        (!$data_pribadi && old('golongan_darah') == 'A') ||
+                                                        ($data_pribadi && $data_pribadi->golongan_darah == '-' && old('golongan_darah') == 'A')) selected @endif>
                                                     A
                                                 </option>
-                                                <option
-                                                    value="B"{{ $data_pribadi->golongan_darah == 'B' ? 'selected' : '' }}>
+                                                <option value="B" @if (
+                                                    ($data_pribadi && $data_pribadi->golongan_darah == 'B') ||
+                                                        (!$data_pribadi && old('golongan_darah') == 'B') ||
+                                                        ($data_pribadi && $data_pribadi->golongan_darah == '-' && old('golongan_darah') == 'B')) selected @endif>
                                                     B
                                                 </option>
-                                                <option
-                                                    value="AB"{{ $data_pribadi->golongan_darah == 'AB' ? 'selected' : '' }}>
+                                                <option value="AB" @if (
+                                                    ($data_pribadi && $data_pribadi->golongan_darah == 'AB') ||
+                                                        (!$data_pribadi && old('golongan_darah') == 'AB') ||
+                                                        ($data_pribadi && $data_pribadi->golongan_darah == '-' && old('golongan_darah') == 'AB')) selected @endif>
                                                     AB
                                                 </option>
-                                                <option
-                                                    value="O"{{ $data_pribadi->golongan_darah == 'O' ? 'selected' : '' }}>
+                                                <option value="O" @if (
+                                                    ($data_pribadi && $data_pribadi->golongan_darah == 'O') ||
+                                                        (!$data_pribadi && old('golongan_darah') == 'O') ||
+                                                        ($data_pribadi && $data_pribadi->golongan_darah == '-' && old('golongan_darah') == 'O')) selected @endif>
                                                     O
                                                 </option>
                                             </select>
@@ -298,30 +338,41 @@
                                         <div class="form-group col-lg-3 col-md-6 col-sm-12">
                                             <label for="status_kawin">Status Kawin</label>
                                             <select name="status_kawin" id="status_kawin"
-                                                class="form-control @error('status_kawin') is-invalid @enderror" disabled>
+                                                class="form-control @error('status_kawin') is-invalid @enderror"
+                                                @disabled($data_pribadi && $data_pribadi->status_isi == '1')>
                                                 <option value="">-- Pilih Status Kawin --</option>
-                                                <option
-                                                    value="TK"{{ $data_pribadi->status_kawin == 'TK' ? 'selected' : '' }}>
+                                                <option value="TK" @if (
+                                                    ($data_pribadi && $data_pribadi->status_kawin == 'TK') ||
+                                                        (!$data_pribadi && old('status_kawin') == 'TK') ||
+                                                        ($data_pribadi && $data_pribadi->status_kawin == null && old('status_kawin') == 'TK')) selected @endif>
                                                     Tidak
                                                     Kawin
                                                 </option>
-                                                <option
-                                                    value="K0"{{ $data_pribadi->status_kawin == 'K0' ? 'selected' : '' }}>
+                                                <option value="K0" @if (
+                                                    ($data_pribadi && $data_pribadi->status_kawin == 'K0') ||
+                                                        (!$data_pribadi && old('status_kawin') == 'K0') ||
+                                                        ($data_pribadi && $data_pribadi->status_kawin == null && old('status_kawin') == 'K0')) selected @endif>
                                                     Kawin 0
                                                     Tanggungan
                                                 </option>
-                                                <option
-                                                    value="K1"{{ $data_pribadi->status_kawin == 'K1' ? 'selected' : '' }}>
+                                                <option value="K1" @if (
+                                                    ($data_pribadi && $data_pribadi->status_kawin == 'K1') ||
+                                                        (!$data_pribadi && old('status_kawin') == 'K1') ||
+                                                        ($data_pribadi && $data_pribadi->status_kawin == null && old('status_kawin') == 'K1')) selected @endif>
                                                     Kawin 1
                                                     Tanggungan
                                                 </option>
-                                                <option
-                                                    value="K2"{{ $data_pribadi->status_kawin == 'K2' ? 'selected' : '' }}>
+                                                <option value="K2" @if (
+                                                    ($data_pribadi && $data_pribadi->status_kawin == 'K2') ||
+                                                        (!$data_pribadi && old('status_kawin') == 'K2') ||
+                                                        ($data_pribadi && $data_pribadi->status_kawin == null && old('status_kawin') == 'K2')) selected @endif>
                                                     Kawin 2
                                                     Tanggungan
                                                 </option>
-                                                <option
-                                                    value="K3"{{ $data_pribadi->status_kawin == 'K3' ? 'selected' : '' }}>
+                                                <option value="K3" @if (
+                                                    ($data_pribadi && $data_pribadi->status_kawin == 'K3') ||
+                                                        (!$data_pribadi && old('status_kawin') == 'K3') ||
+                                                        ($data_pribadi && $data_pribadi->status_kawin == null && old('status_kawin') == 'K3')) selected @endif>
                                                     Kawin 3
                                                     Tanggungan
                                                 </option>
@@ -338,7 +389,7 @@
                                                 class="form-control @error('tanggal_nikah') is-invalid @enderror"
                                                 name="tanggal_nikah"
                                                 id="tanggal_nikah"value="{{ $data_pribadi->tanggal_nikah }}"
-                                                placeholder="Enter Tanggal nikah" disabled>
+                                                placeholder="Enter Tanggal nikah" @disabled($data_pribadi && $data_pribadi->status_isi == '1')>
 
                                             @error('tanggal_nikah')
                                                 <div class="text-danger">{{ $message }}</div>
@@ -351,7 +402,7 @@
                                                 class="form-control @error('buku_nikah') is-invalid @enderror"
                                                 id="buku_nikah" name="buku_nikah"
                                                 value="{{ $data_pribadi->buku_nikah }}" onchange="PratinjauGambar()"
-                                                placeholder="Enter Buku Nikah" disabled>
+                                                placeholder="Enter Buku Nikah" @disabled($data_pribadi && $data_pribadi->status_isi == '1')>
                                             @if (!$errors->has('buku_nikah'))
                                                 {{-- <div class="mb-2"> --}}
                                                 <p>*Ukuran File Tidak Boleh Lebih Dari 800 KB | Harus .jpg, .jpeg, atau

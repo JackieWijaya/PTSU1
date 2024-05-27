@@ -139,10 +139,10 @@
                     </td>
                     <th>Jabatan</th>
                     <td>
-                        @if (is_null($data_pribadi->jabatan) || $data_pribadi->jabatan === '')
+                        @if (is_null($data_pribadi->jabatans_id) || $data_pribadi->jabatans_id === '')
                             -
                         @else
-                            {{ $data_pribadi->jabatan }}
+                            {{ $data_pribadi->jabatan->nama_jabatan }}
                         @endif
                     </td>
                 </tr>

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             // $table->foreignId('users_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
             $table->string('nama_lengkap');
-            $table->date('tanggal_lahir');
+            $table->date('tanggal_lahir')->nullable();
             $table->enum('jenis_kelamin', ['Laki-Laki', 'Perempuan']);
             $table->string('tempat_lahir');
             $table->string('alamat');
@@ -36,7 +36,7 @@ return new class extends Migration
             $table->string('npwp')->nullable();
             $table->string('nik')->nullable();
             $table->enum('status', ['Diterima', 'Ditolak'])->nullable();
-            $table->string('jabatan')->nullable();
+            $table->foreignId('jabatans_id')->nullable()->constrained()->onDelete('cascade')->onUpdate('cascade');
             $table->string('devisi')->nullable();
             $table->date('tanggal_masuk_kerja')->nullable();
             $table->date('tanggal_berakhir_kerja')->nullable();

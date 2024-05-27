@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\data_karyawan;
+use App\Models\jabatan;
 use App\Models\data_pribadi;
 use App\Models\data_keluarga_inti;
 use App\Models\data_keluarga_kandung;
@@ -10,6 +11,7 @@ use App\Models\data_pendidikan;
 use App\Models\pelatihan_sertifikat;
 use App\Models\pengalaman_kerja;
 use App\Models\bahasa_asing;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -22,11 +24,24 @@ class DataKaryawanController extends Controller
     public function index()
     {
         //
-        $no_hp = Auth::user()->no_hp; // Mengambil pengguna yang sedang login
-        $data_pribadi = data_pribadi::where('no_hp', $no_hp)->first();
-        $data_keluarga_inti = data_keluarga_inti::where('data_pribadis_id', $data_pribadi->id)->get();
-        $bahasa_asing = bahasa_asing::where('data_pribadis_id', $data_pribadi->id)->first();
-        return view('data_karyawan.index')->with('data_pribadi', $data_pribadi)->with('data_keluarga_inti', $data_keluarga_inti)->with('bahasa_asing', $bahasa_asing);
+        if (Auth::user()->role == 'HRD'){
+            $data_karyawan = User::select('users.*', 'data_pribadis.*')
+                ->join('data_pribadis', 'users.no_hp', '=', 'data_pribadis.no_hp')
+                ->where('users.role', '!=', 'HRD')
+                ->get();
+            return view('data_karyawan.index')->with('data_karyawan', $data_karyawan);
+        } else {
+            $no_hp = Auth::user()->no_hp; // Mengambil pengguna yang sedang login
+            $data_pribadi = data_pribadi::where('no_hp', $no_hp)->first();
+            $data_keluarga_inti = data_keluarga_inti::where('data_pribadis_id', $data_pribadi->id)->get();
+            $data_keluarga_kandung = data_keluarga_kandung::where('data_pribadis_id', $data_pribadi->id)->get();
+            $data_pendidikan = data_pendidikan::where('data_pribadis_id', $data_pribadi->id)->get();
+            $pelatihan_sertifikat = pelatihan_sertifikat::where('data_pribadis_id', $data_pribadi->id)->get();
+            $pengalaman_kerja = pengalaman_kerja::where('data_pribadis_id', $data_pribadi->id)->get();
+            $bahasa_asing = bahasa_asing::where('data_pribadis_id', $data_pribadi->id)->first();
+
+            return view('data_karyawan.index')->with('data_pribadi', $data_pribadi)->with('data_keluarga_inti', $data_keluarga_inti)->with('data_keluarga_kandung', $data_keluarga_kandung)->with('data_pendidikan', $data_pendidikan)->with('pelatihan_sertifikat', $pelatihan_sertifikat)->with('pengalaman_kerja', $pengalaman_kerja)->with('bahasa_asing', $bahasa_asing);
+        }
     }
 
     /**
@@ -35,6 +50,8 @@ class DataKaryawanController extends Controller
     public function create()
     {
         //
+        $jabatans = jabatan::all();
+        return view('data_karyawan.create')->with('jabatans', $jabatans);
     }
 
     /**
@@ -43,6 +60,54 @@ class DataKaryawanController extends Controller
     public function store(Request $request)
     {
         //
+        // 1. Validasi
+        $validateData = $request->validate([
+            'nama_lengkap'        => 'required', 
+            'no_hp'               => 'required|numeric|gt:-1|unique:users',
+            'jenis_kelamin'       => 'required', 
+            'jabatan'             => 'required', 
+            'devisi'              => 'required', 
+            'golongan'            => 'required',
+            'tanggal_masuk_kerja' => 'required'
+        ],
+        [
+            'nama_lengkap.required'        => 'Nama Lengkap Harus Diisi',
+            'no_hp.required'               => 'No HP Harus Diisi',
+            'no_hp.numeric'                => 'No HP Harus Angka',
+            'no_hp.gt'                     => 'No HP Tidak Boleh Min',
+            'no_hp.unique'                 => 'No HP Sudah Terdaftar',
+            'jenis_kelamin.required'       => 'Pilih Jenis Kelamin',
+            'jabatan.required'             => 'Pilih Jabatan',
+            'devisi.required'              => 'Devisi Harus Diisi',
+            'golongan.required'            => 'Golongan Harus Diisi',
+            'tanggal_masuk_kerja.required' => 'Tanggal Masuk Kerja Harus Diisi'
+        ]);
+
+        $user = new User();
+        $user->name     = $validateData['nama_lengkap'];
+        $user->no_hp    = $validateData['no_hp'];
+        $user->password = $validateData['no_hp'];
+        $user->save();
+
+        $data_pribadi = new data_pribadi();
+        $data_pribadi->nama_lengkap        = $validateData['nama_lengkap'];
+        $data_pribadi->jenis_kelamin       = $validateData['jenis_kelamin'];
+        $data_pribadi->tempat_lahir        = '-';
+        $data_pribadi->no_hp               = $validateData['no_hp'];
+        $data_pribadi->email               = '-';
+        $data_pribadi->alamat              = '-';
+        $data_pribadi->pendidikan_terakhir = '-';
+        $data_pribadi->agama               = '-';
+        $data_pribadi->golongan_darah      = '-';
+        $data_pribadi->status              = 'Diterima';
+        $data_pribadi->jabatans_id         = $validateData['jabatan'];
+        $data_pribadi->devisi              = $validateData['devisi'];
+        $data_pribadi->golongan            = $validateData['golongan'];
+        $data_pribadi->tanggal_masuk_kerja = $validateData['tanggal_masuk_kerja'];
+        $data_pribadi->save();
+
+        Alert::success('Berhasil', "Data Karyawan Berhasil Ditambahkan");
+        return redirect()->route('data_karyawan.index');
     }
 
     /**

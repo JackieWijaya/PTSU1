@@ -196,7 +196,7 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="{{ url('data_pelamar') }}" class="nav-link">
+                                    <a href="{{ url('jabatan') }}" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Jabatan</p>
                                     </a>

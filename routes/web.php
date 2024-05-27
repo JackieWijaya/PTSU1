@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\JabatanController;
 use App\Http\Controllers\DataPribadiController;
 use App\Http\Controllers\DataPelamarController;
 use App\Http\Controllers\DataKaryawanController;
@@ -36,6 +37,7 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+Route::resource('/jabatan', JabatanController::class);
 Route::resource('/data_pribadi', DataPribadiController::class);
 Route::resource('/data_pelamar', DataPelamarController::class);
 Route::resource('/data_karyawan', DataKaryawanController::class);

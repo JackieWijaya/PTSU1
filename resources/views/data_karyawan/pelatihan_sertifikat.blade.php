@@ -133,7 +133,7 @@
                                     </div>
 
                                     <div class="form-group col-lg-3 col-md-6 col-sm-12">
-                                        <label for="akhir_pelatihan">Tanggal Akhir</label>
+                                        <label for="akhir_pelatihan">Tanggal Berakhir</label>
                                         <input type="date"
                                             class="form-control @error('akhir_pelatihan') is-invalid @enderror"
                                             name="akhir_pelatihan"

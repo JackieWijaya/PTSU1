@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\User;
+use App\Models\jabatan;
 use App\Models\data_pribadi;
 use App\Models\pengaturan_presensi;
 use Illuminate\Database\Seeder;
@@ -28,18 +29,8 @@ class DatabaseSeeder extends Seeder
             'role'     => 'HRD',
         ]);
 
-        data_pribadi::query()->create([
-            'nama_lengkap'        => 'HRD',
-            'tanggal_lahir'       => '2012-12-12',
-            'jenis_kelamin'       => 'Laki-Laki',
-            'tempat_lahir'        => '-',
-            'alamat'              => '-',
-            'pendidikan_terakhir' => '-',
-            'no_hp'               => '081234567890',
-            'email'               => 'hrd@gmail.com',
-            'agama'               => '-',
-            'golongan_darah'      => '-',
-            'status'              => 'Diterima',
+        jabatan::query()->create([
+            'nama_jabatan' => 'HRD',
         ]);
 
         data_pribadi::query()->create([
@@ -108,7 +99,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         pengaturan_presensi::query()->create([
-            'lokasi'     => '-2.9685911021601874, 104.77246514075837',
+            'lokasi'     => '-2.973488594813909, 104.76410656834805',
             'radius'     => '30',
             'jam_masuk'  => '08:00:00',
             'jam_keluar' => '17:00:00',
