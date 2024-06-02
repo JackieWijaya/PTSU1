@@ -28,9 +28,49 @@ class DatabaseSeeder extends Seeder
             'password' => '081234567890',
             'role'     => 'HRD',
         ]);
+        User::query()->create([
+            'name'     => 'Budi',
+            'no_hp'    => '082345678901',
+            'password' => '082345678901',
+        ]);
+        User::query()->create([
+            'name'     => 'Martin',
+            'no_hp'    => '085678901234',
+            'password' => '085678901234',
+        ]);
 
         jabatan::query()->create([
-            'nama_jabatan' => 'HRD',
+            'nama_jabatan' => 'Pembukuan',
+        ]);
+        jabatan::query()->create([
+            'nama_jabatan' => 'Pajak',
+        ]);
+        jabatan::query()->create([
+            'nama_jabatan' => 'IT',
+        ]);
+        jabatan::query()->create([
+            'nama_jabatan' => 'Adm Umum',
+        ]);
+        jabatan::query()->create([
+            'nama_jabatan' => 'Marketing',
+        ]);
+        jabatan::query()->create([
+            'nama_jabatan' => 'Sales Alat Berat',
+        ]);
+        jabatan::query()->create([
+            'nama_jabatan' => 'Sales Angkutan Berat',
+        ]);
+        jabatan::query()->create([
+            'nama_jabatan' => 'Operasional Alat Berat',
+        ]);
+        jabatan::query()->create([
+            'nama_jabatan' => 'Operasional Angkutan Berat',
+        ]);
+        jabatan::query()->create([
+            'nama_jabatan' => 'Mekanik',
+        ]);
+        jabatan::query()->create([
+            'nama_jabatan' => 'Gudang',
         ]);
 
         data_pribadi::query()->create([
@@ -57,6 +97,7 @@ class DatabaseSeeder extends Seeder
             'email'               => 'budi@gmail.com',
             'agama'               => 'Islam',
             'golongan_darah'      => 'B',
+            'status'              => 'Diterima',
         ]);
 
         data_pribadi::query()->create([
@@ -96,6 +137,7 @@ class DatabaseSeeder extends Seeder
             'email'               => 'dewi@gmail.com',
             'agama'               => 'Islam',
             'golongan_darah'      => 'A',
+            'status'              => 'Diterima',
         ]);
 
         pengaturan_presensi::query()->create([

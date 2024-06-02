@@ -17,50 +17,75 @@ class PresensiController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $today = now()->toDateString(); // Mengambil tanggal hari ini dalam format Y-m-d
-        $bulanini = date('m') * 1;
-        $tahunini = date('Y');
-        $no_hp = Auth::user()->no_hp;
-        $data_pribadi = data_pribadi::where('no_hp', $no_hp)->first();
+        if(Auth::user()->role == 'Karyawan'){
+            $today = now()->toDateString(); // Mengambil tanggal hari ini dalam format Y-m-d
+            $bulanini = date('m') * 1;
+            $tahunini = date('Y');
+            $no_hp = Auth::user()->no_hp;
+            $data_pribadi = data_pribadi::where('no_hp', $no_hp)->first();
 
-        // Menghitung jumlah presensi berdasarkan tanggal hari ini
-        $cek = Presensi::whereDate('created_at', $today)
-                        ->where('nik', $data_pribadi->nik)
-                        ->count();
-        
-        $presensi = Presensi::whereDate('created_at', $today)->where('nik', $data_pribadi->nik)->first();
-        if($presensi != null){
-            if($presensi->foto_keluar != '-'){
-                $cek1 = 1;
+            // Menghitung jumlah presensi berdasarkan tanggal hari ini
+            $cek = Presensi::whereDate('created_at', $today)
+                            ->where('nik', $data_pribadi->nik)
+                            ->count();
+            
+            $presensi = Presensi::whereDate('created_at', $today)->where('nik', $data_pribadi->nik)->first();
+            if($presensi != null){
+                if($presensi->foto_keluar != '-'){
+                    $cek1 = 1;
+                } else {
+                    $cek1 = 0;
+                }
             } else {
                 $cek1 = 0;
             }
+
+            $presensisblnini = Presensi::where('nik', $data_pribadi->nik)
+                        ->whereYear('created_at', $tahunini)
+                        ->whereMonth('created_at', $bulanini)
+                        ->get();
+
+            $presensis = Presensi::where('nik', $data_pribadi->nik)->get();
+
+            $namabulan = ["", "Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+
+            $pengaturan_presensi = pengaturan_presensi::where('id', 1)->first();
+            // dd($pengaturan_presensi);
+
+            $jam_terlambat = Carbon::parse($pengaturan_presensi->jam_masuk)->addMinutes(10)->format('H:i:s');
+            $terlambat = Presensi::where('nik', $data_pribadi->nik)
+            ->whereYear('created_at', $tahunini)
+            ->whereMonth('created_at', $bulanini)
+            ->whereTime('created_at', '>', $jam_terlambat)
+            ->get();
+
+            return view('presensi.index')->with('cek', $cek)->with('cek1', $cek1)->with('presensis', $presensis)->with('presensisblnini', $presensisblnini)->with('namabulan', $namabulan)->with('bulanini', $bulanini)->with('tahunini', $tahunini)->with('pengaturan_presensi', $pengaturan_presensi)->with('terlambat', $terlambat);
         } else {
-            $cek1 = 0;
+            $bulanini = date('m') * 1;
+            $tahunini = date('Y');
+            // Memeriksa apakah ada parameter tanggal
+            $tanggal = $request->get('tanggal', Carbon::now()->format('Y-m-d'));
+
+            $presensisblnini = Presensi::select(
+                'presensis.*',
+                'data_pribadis.nama_lengkap',
+                'jabatans.nama_jabatan')
+                ->join('data_pribadis', 'presensis.nik', '=', 'data_pribadis.nik')
+                ->join('jabatans', 'data_pribadis.jabatans_id', '=', 'jabatans.id')
+                ->whereDate('presensis.created_at', $tanggal)
+                ->get();
+
+            $pengaturan_presensi = pengaturan_presensi::where('id', 1)->first();
+            $jam_terlambat = Carbon::parse($pengaturan_presensi->jam_masuk)->addMinutes(10)->format('H:i:s');
+            $terlambat = Presensi::whereYear('created_at', $tahunini)
+                ->whereMonth('created_at', $bulanini)
+                ->whereTime('created_at', '>', $jam_terlambat)
+                ->get();
+
+            return view('presensi.index')->with('presensisblnini', $presensisblnini)->with('pengaturan_presensi', $pengaturan_presensi)->with('terlambat', $terlambat);
         }
-
-        $presensisblnini = Presensi::where('nik', $data_pribadi->nik)
-                     ->whereYear('created_at', $tahunini)
-                     ->whereMonth('created_at', $bulanini)
-                     ->get();
-
-        $presensis = Presensi::where('nik', $data_pribadi->nik)->get();
-
-        $namabulan = ["", "Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
-
-        $pengaturan_presensi = pengaturan_presensi::where('id', 1)->first();
-        // dd($pengaturan_presensi);
-
-        $jam_terlambat = Carbon::parse($pengaturan_presensi->jam_masuk)->addMinutes(10)->format('H:i:s');
-        $terlambat = Presensi::where('nik', $data_pribadi->nik)
-        ->whereYear('created_at', $tahunini)
-        ->whereMonth('created_at', $bulanini)
-        ->whereTime('created_at', '>', $jam_terlambat)
-        ->get();
-
-        return view('presensi.index')->with('cek', $cek)->with('cek1', $cek1)->with('presensis', $presensis)->with('presensisblnini', $presensisblnini)->with('namabulan', $namabulan)->with('bulanini', $bulanini)->with('tahunini', $tahunini)->with('pengaturan_presensi', $pengaturan_presensi)->with('terlambat', $terlambat);
     }
 
     /**

@@ -18,18 +18,24 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($data_keluarga_kandung as $item)
+                @if ($data_keluarga_kandung->isNotEmpty())
+                    @foreach ($data_keluarga_kandung as $item)
+                        <tr>
+                            <td>{{ $no++ }}</td>
+                            <td>{{ $item->status_keluarga }}</td>
+                            <td>{{ $item->nama_anggota_keluarga }}</td>
+                            <td>{{ $item->jenis_kelamin }}</td>
+                            <td>{{ $item->tempat_lahir }}</td>
+                            <td>{{ \Carbon\Carbon::parse($item->tanggal_lahir)->format('d F Y') }}</td>
+                            <td>{{ $item->pendidikan }}</td>
+                            <td>{{ $item->pekerjaan }}</td>
+                        </tr>
+                    @endforeach
+                @else
                     <tr>
-                        <td>{{ $no++ }}</td>
-                        <td>{{ $item->status_keluarga }}</td>
-                        <td>{{ $item->nama_anggota_keluarga }}</td>
-                        <td>{{ $item->jenis_kelamin }}</td>
-                        <td>{{ $item->tempat_lahir }}</td>
-                        <td>{{ \Carbon\Carbon::parse($item->tanggal_lahir)->format('d F Y') }}</td>
-                        <td>{{ $item->pendidikan }}</td>
-                        <td>{{ $item->pekerjaan }}</td>
+                        <td colspan="8">Belum Ada Data / User Belum Melakukan Input Data</td>
                     </tr>
-                @endforeach
+                @endif
             </tbody>
         </table>
     </div>

@@ -62,10 +62,16 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>{{ $bahasa_asing->lisan }}</td>
-                                        <td>{{ $bahasa_asing->tulisan }}</td>
-                                    </tr>
+                                    @if ($bahasa_asing)
+                                        <tr>
+                                            <td>{{ $bahasa_asing->lisan }}</td>
+                                            <td>{{ $bahasa_asing->tulisan }}</td>
+                                        </tr>
+                                    @else
+                                        <tr>
+                                            <td colspan="2">Belum Ada Data / User Belum Melakukan Input Data</td>
+                                        </tr>
+                                    @endif
                                 </tbody>
                             </table>
                         </div>

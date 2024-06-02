@@ -12,7 +12,13 @@
             <tbody>
                 <tr>
                     <th>NIK</th>
-                    <td>{{ $data_pribadi->nik }}</td>
+                    <td>
+                        @if ($data_pribadi->nik == null)
+                            -
+                        @else
+                            {{ $data_pribadi->nik }}
+                        @endif
+                    </td>
                     <th>Nama Lengkap</th>
                     <td>{{ $data_pribadi->nama_lengkap }}</td>
                     <th>No HP</th>

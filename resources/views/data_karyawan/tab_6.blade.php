@@ -17,17 +17,23 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($pengalaman_kerja as $item)
+                @if ($pengalaman_kerja->isNotEmpty())
+                    @foreach ($pengalaman_kerja as $item)
+                        <tr>
+                            <td align="center">{{ $no++ }}</td>
+                            <td align="center">{{ $item->nama_perusahaan }}</td>
+                            <td align="center">{{ $item->jabatan }}</td>
+                            <td align="center">{{ \Carbon\Carbon::parse($item->mulai)->format('d F Y') }}</td>
+                            <td align="center">{{ \Carbon\Carbon::parse($item->akhir)->format('d F Y') }}</td>
+                            <td align="right">Rp. {{ number_format($item->gaji) }}</td>
+                            <td align="center">{{ $item->alasan_keluar }}</td>
+                        </tr>
+                    @endforeach
+                @else
                     <tr>
-                        <td align="center">{{ $no++ }}</td>
-                        <td align="center">{{ $item->nama_perusahaan }}</td>
-                        <td align="center">{{ $item->jabatan }}</td>
-                        <td align="center">{{ \Carbon\Carbon::parse($item->mulai)->format('d F Y') }}</td>
-                        <td align="center">{{ \Carbon\Carbon::parse($item->akhir)->format('d F Y') }}</td>
-                        <td align="right">Rp. {{ number_format($item->gaji) }}</td>
-                        <td align="center">{{ $item->alasan_keluar }}</td>
+                        <td colspan="7" align="center">Belum Ada Data / User Belum Melakukan Input Data</td>
                     </tr>
-                @endforeach
+                @endif
             </tbody>
         </table>
     </div>

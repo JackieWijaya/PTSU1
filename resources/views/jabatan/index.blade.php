@@ -60,20 +60,15 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div class="modal-body" id="mb-konfirmasi">
-
-                    </div>
+                    <div class="modal-body" id="mb-konfirmasi"></div>
                     <div class="modal-footer justify-content-between">
                         <button type="button" class="btn btn-outline-light" data-dismiss="modal">Batal</button>
                         <button type="submit" class="btn btn-outline-light">Ya, Hapus</button>
                     </div>
                 </form>
             </div>
-
         </div>
-
     </div>
-    {{-- @include('dataBarang.modal') --}}
 
     <script src="{{ asset('/plugins/jquery/jquery.min.js') }}"></script>
 

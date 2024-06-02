@@ -14,6 +14,7 @@ use App\Http\Controllers\BahasaAsingController;
 use App\Http\Controllers\PengaturanPresensiController;
 use App\Http\Controllers\PresensiController;
 use App\Http\Controllers\RekapPresensiController;
+use App\Http\Controllers\ProfilController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -37,20 +38,21 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::resource('/jabatan', JabatanController::class);
-Route::resource('/data_pribadi', DataPribadiController::class);
-Route::resource('/data_pelamar', DataPelamarController::class);
-Route::resource('/data_karyawan', DataKaryawanController::class);
-Route::resource('/data_keluarga_inti', DataKeluargaIntiController::class);
-Route::resource('/data_keluarga_kandung', DataKeluargaKandungController::class);
-Route::resource('/data_pendidikan', DataPendidikanController::class);
-Route::resource('/pelatihan_sertifikat', PelatihanSertifikatController::class);
-Route::resource('/pengalaman_kerja', PengalamanKerjaController::class);
-Route::resource('/bahasa_asing', BahasaAsingController::class);
-Route::resource('/presensi', PresensiController::class);
-Route::post('/presensi/store', [PresensiController::class, 'store']);
-Route::resource('/pengaturan_presensi', PengaturanPresensiController::class);
-Route::resource('/rekap_presensi', RekapPresensiController::class);
+Route::resource('/jabatan', JabatanController::class)->middleware(['auth', 'verified']);
+Route::resource('/data_pribadi', DataPribadiController::class)->middleware(['auth', 'verified']);
+Route::resource('/data_pelamar', DataPelamarController::class)->middleware(['auth', 'verified']);
+Route::resource('/data_karyawan', DataKaryawanController::class)->middleware(['auth', 'verified']);
+Route::resource('/data_keluarga_inti', DataKeluargaIntiController::class)->middleware(['auth', 'verified']);
+Route::resource('/data_keluarga_kandung', DataKeluargaKandungController::class)->middleware(['auth', 'verified']);
+Route::resource('/data_pendidikan', DataPendidikanController::class)->middleware(['auth', 'verified']);
+Route::resource('/pelatihan_sertifikat', PelatihanSertifikatController::class)->middleware(['auth', 'verified']);
+Route::resource('/pengalaman_kerja', PengalamanKerjaController::class)->middleware(['auth', 'verified']);
+Route::resource('/bahasa_asing', BahasaAsingController::class)->middleware(['auth', 'verified']);
+Route::resource('/presensi', PresensiController::class)->middleware(['auth', 'verified']);
+Route::post('/presensi/store', [PresensiController::class, 'store'])->middleware(['auth', 'verified']);
+Route::resource('/pengaturan_presensi', PengaturanPresensiController::class)->middleware(['auth', 'verified']);
+Route::resource('/rekap_presensi', RekapPresensiController::class)->middleware(['auth', 'verified']);
+Route::resource('/profil', ProfilController::class)->middleware(['auth', 'verified']);
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

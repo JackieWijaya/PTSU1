@@ -14,6 +14,7 @@ use App\Models\bahasa_asing;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use PhpParser\Node\Stmt\Echo_;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class DataKaryawanController extends Controller
@@ -113,268 +114,135 @@ class DataKaryawanController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(data_karyawan $data_karyawan)
+    public function show(Request $request)
     {
         //
+        $data_pribadi_id = $request->query('id');
+        $data_pribadi = data_pribadi::where('id', $data_pribadi_id)->first();
+        $data_keluarga_inti = data_keluarga_inti::where('data_pribadis_id', $data_pribadi_id)->get();
+        $data_keluarga_kandung = data_keluarga_kandung::where('data_pribadis_id', $data_pribadi_id)->get();
+        $data_pendidikan = data_pendidikan::where('data_pribadis_id', $data_pribadi_id)->get();
+        $pelatihan_sertifikat = pelatihan_sertifikat::where('data_pribadis_id', $data_pribadi_id)->get();
+        $pengalaman_kerja = pengalaman_kerja::where('data_pribadis_id', $data_pribadi_id)->get();
+        $bahasa_asing = bahasa_asing::where('data_pribadis_id', $data_pribadi_id)->first();
+        return view('data_karyawan.detail_info')->with('data_pribadi', $data_pribadi)->with('data_keluarga_inti', $data_keluarga_inti)->with('data_keluarga_kandung', $data_keluarga_kandung)->with('data_pendidikan', $data_pendidikan)->with('pelatihan_sertifikat', $pelatihan_sertifikat)->with('pengalaman_kerja', $pengalaman_kerja)->with('bahasa_asing', $bahasa_asing);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(data_karyawan $data_karyawan)
+    public function edit($id)
     {
         //
+        $data_pribadi = data_pribadi::where('id', $id)->first();
+        $jabatans = jabatan::all();
+        return view('data_karyawan.data_pribadi_hrd')->with('data_pribadi', $data_pribadi)->with('jabatans', $jabatans);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request)
+    public function update(Request $request, $id)
     {
         //
-        // 1. Validasi
-        $validateData = $request->validate([
-            'nik_pribadi'          => 'required|numeric|gt:-1',
-            'ktp'                  => 'required|image|max:800|mimes:jpg,jpeg,png',
-            'rekening'             => 'image|max:800|mimes:jpg,jpeg,png',
-            'sim'                  => 'image|max:800|mimes:jpg,jpeg,png',
-            'kk'                   => 'required|image|max:800|mimes:jpg,jpeg,png',
-            'bpjs_ketenagakerjaan' => 'image|max:800|mimes:jpg,jpeg,png',
-            'bpjs_kesehatan'       => 'image|max:800|mimes:jpg,jpeg,png',
-            'npwp'                 => 'image|max:800|mimes:jpg,jpeg,png',
+        $update_status_isi = $request->input('status_isi');
+        // dd($update_status_isi);
 
-            'nik_inti'                   => 'required',
-            'status_keluarga_inti'       => 'required',
-            'nama_anggota_keluarga_inti' => 'required',
-            'ktp_pasangan'               => 'image|max:800|mimes:jpg,jpeg,png',
-            'tempat_lahir_inti'          => 'required',
-            'tanggal_lahir_inti'         => 'required',
-            'pendidikan_inti'            => 'required',
-            'pekerjaan_inti'             => 'required',
+        if($update_status_isi == '0'){
+            $data_pribadi = data_pribadi::findOrFail($id);
+            $data_pribadi->status_isi = $update_status_isi;
+            $data_pribadi->update();
+            $data_keluarga_inti = data_keluarga_inti::where('data_pribadis_id', $id)->get();
+            if($data_keluarga_inti->isNotEmpty()){
+                // Loop melalui setiap entri dan perbarui status_isi
+                foreach ($data_keluarga_inti as $data) {
+                    $data->status_isi = $update_status_isi;
+                    $data->update();
+                }
+            }
+            $data_keluarga_kandung = data_keluarga_kandung::where('data_pribadis_id', $id)->get();
+            if($data_keluarga_kandung->isNotEmpty()){
+                // Loop melalui setiap entri dan perbarui status_isi
+                foreach ($data_keluarga_kandung as $data) {
+                    $data->status_isi = $update_status_isi;
+                    $data->update();
+                }
+            }
+            $data_pendidikan = data_pendidikan::where('data_pribadis_id', $id)->get();
+            if($data_pendidikan->isNotEmpty()){
+                // Loop melalui setiap entri dan perbarui status_isi
+                foreach ($data_pendidikan as $data) {
+                    $data->status_isi = $update_status_isi;
+                    $data->update();
+                }
+            }
+            $pelatihan_sertifikat = pelatihan_sertifikat::where('data_pribadis_id', $id)->get();
+            if($pelatihan_sertifikat->isNotEmpty()){
+                // Loop melalui setiap entri dan perbarui status_isi
+                foreach ($pelatihan_sertifikat as $data) {
+                    $data->status_isi = $update_status_isi;
+                    $data->update();
+                }
+            }
+            $pengalaman_kerja = pengalaman_kerja::where('data_pribadis_id', $id)->get();
+            if($pengalaman_kerja->isNotEmpty()){
+                // Loop melalui setiap entri dan perbarui status_isi
+                foreach ($pengalaman_kerja as $data) {
+                    $data->status_isi = $update_status_isi;
+                    $data->update();
+                }
+            }
+            $bahasa_asing = bahasa_asing::where('data_pribadis_id', $id)->first();
+            if($bahasa_asing){
+                $bahasa_asing->status_isi = $update_status_isi;
+                $bahasa_asing->update();
+            }
+            Alert::success('Berhasil', "Akses Edit Data Karyawan Dengan NIK $data_pribadi->nik Atas Nama $data_pribadi->nama_lengkap Berhasil Dibuka");
+            return redirect()->route('data_karyawan.index');
+        } else {      
+            // 1. Validasi
+            $validateData = $request->validate([
+                'jabatan'             => 'required', 
+                'devisi'              => 'required', 
+                'golongan'            => 'required',
+                'tanggal_masuk_kerja' => 'required'
+            ],
+            [
+                'jabatan.required'             => 'Pilih Jabatan',
+                'devisi.required'              => 'Devisi Harus Diisi',
+                'golongan.required'            => 'Golongan Harus Diisi',
+                'tanggal_masuk_kerja.required' => 'Tanggal Masuk Kerja Harus Diisi'
+            ]);
 
-            'status_keluarga_kandung'       => 'required',
-            'nama_anggota_keluarga_kandung' => 'required',
-            'jenis_kelamin_kandung'         => 'required',
-            'tempat_lahir_kandung'          => 'required',
-            'tanggal_lahir_kandung'         => 'required',
-            'pendidikan_kandung'            => 'required',
-            'pekerjaan_kandung'             => 'required',
+            $data_pribadi = data_pribadi::findOrFail($id);
+            $data_pribadi->jabatans_id         = $validateData['jabatan'];
+            $data_pribadi->devisi              = $validateData['devisi'];
+            $data_pribadi->golongan            = $validateData['golongan'];
+            $data_pribadi->tanggal_masuk_kerja = $validateData['tanggal_masuk_kerja'];
+            $data_pribadi->update();
 
-            'jenjang'      => 'required',
-            'fakultas'     => 'required',
-            'nama_sekolah' => 'required',
-            'jurusan'      => 'required',
-            'tahun_masuk'  => 'required',
-            'tahun_lulus'  => 'required',
-
-            'nama_lembaga'    => 'required',
-            'jenis'           => 'required',
-            'mulai_pelatihan' => 'required',
-            'akhir_pelatihan' => 'required',
-
-            'nama_perusahaan' => 'required',
-            'jabatan'         => 'required',
-            'mulai_kerja'     => 'required',
-            'akhir_kerja'     => 'required',
-            'gaji'            => 'required',
-            'alasan_keluar'   => 'required',
-
-            'lisan'   => 'required',
-            'tulisan' => 'required'
-        ],
-        [
-            'nik_pribadi.required'       => 'NIK Harus Diisi',
-            'nik_pribadi.numeric'        => 'NIK Harus Angka',
-            'nik_pribadi.gt'             => 'NIK Tidak Boleh Min',
-            'ktp.required'               => 'KTP Harus Diisi',
-            'ktp.image'                  => 'File Harus Foto',   
-            'ktp.mimes'                  => 'Format Harus .jpg/.jpeg/.png',
-            'ktp.max'                    => 'Ukuran File Tidak Boleh Lebih Dari 800 KB',
-            'rekening.image'             => 'File Harus Foto',   
-            'rekening.mimes'             => 'Format Harus .jpg/.jpeg/.png',
-            'rekening.max'               => 'Ukuran File Tidak Boleh Lebih Dari 800 KB',
-            'sim.image'                  => 'File Harus Foto',   
-            'sim.mimes'                  => 'Format Harus .jpg/.jpeg/.png',
-            'sim.max'                    => 'Ukuran File Tidak Boleh Lebih Dari 800 KB',
-            'kk.required'                => 'KK Harus Diisi',
-            'kk.image'                   => 'File Harus Foto',   
-            'kk.mimes'                   => 'Format Harus .jpg/.jpeg/.png',
-            'kk.max'                     => 'Ukuran File Tidak Boleh Lebih Dari 800 KB',
-            'bpjs_ketenagakerjaan.image' => 'File Harus Foto',   
-            'bpjs_ketenagakerjaan.mimes' => 'Format Harus .jpg/.jpeg/.png',
-            'bpjs_ketenagakerjaan.max'   => 'Ukuran File Tidak Boleh Lebih Dari 800 KB',
-            'bpjs_kesehatan.image'       => 'File Harus Foto',   
-            'bpjs_kesehatan.mimes'       => 'Format Harus .jpg/.jpeg/.png',
-            'bpjs_kesehatan.max'         => 'Ukuran File Tidak Boleh Lebih Dari 800 KB',
-            'npwp.image'                 => 'File Harus Foto',   
-            'npwp.mimes'                 => 'Format Harus .jpg/.jpeg/.png',
-            'npwp.max'                   => 'Ukuran File Tidak Boleh Lebih Dari 800 KB',
-
-            'nik_inti.required'                   => 'NIK Harus Diisi',
-            'status_keluarga_inti.required'       => 'Status Keluarga Harus Diisi',
-            'nama_anggota_keluarga_inti.required' => 'Nama Anggota Keluarga Harus Diisi',
-            'ktp_pasangan.image'                  => 'File Harus Foto',   
-            'ktp_pasangan.mimes'                  => 'Format Harus .jpg/.jpeg/.png',
-            'ktp_pasangan.max'                    => 'Ukuran File Tidak Boleh Lebih Dari 800 KB',
-            'tempat_lahir_inti.required'          => 'Tempat Lahir Harus Diisi',
-            'tanggal_lahir_inti.required'         => 'Tanggal Lahir Harus Diisi',
-            'pendidikan_inti.required'            => 'Pendidikan Harus Diisi',
-            'pekerjaan_inti.required'             => 'Pekerjaan Harus Diisi',
-
-            'status_keluarga_kandung.required'       => 'Status Keluarga Harus Diisi',
-            'nama_anggota_keluarga_kandung.required' => 'Nama Anggota Keluarga Harus Diisi',
-            'jenis_kelamin_kandung.required'         => 'Pilih Jenis Kelamin',
-            'tempat_lahir_kandung.required'          => 'Tempat Lahir Harus Diisi',
-            'tanggal_lahir_kandung.required'         => 'Tanggal Lahir Harus Diisi',
-            'pendidikan_kandung.required'            => 'Pendidikan Harus Diisi',
-            'pekerjaan_kandung.required'             => 'Pekerjaan Harus Diisi',
-
-            'jenjang.required'      => 'Jenjang Harus Diisi',
-            'fakultas.required'     => 'Fakultas Harus Diisi',
-            'nama_sekolah.required' => 'Nama Sekolah Harus Diisi',
-            'jurusan.required'      => 'Jurusan Harus Diisi',
-            'tahun_masuk.required'  => 'Tahun Masuk Harus Diisi',
-            'tahun_lulus.required'  => 'Tahun Lulus Harus Diisi',
-
-            'nama_lembaga.required'    => 'Nama Lembaga Harus Diisi',
-            'jenis.required'           => 'Jenis Harus Diisi',
-            'mulai_pelatihan.required' => 'Mulai Harus Diisi',
-            'akhir_pelatihan.required' => 'Akhir Harus Diisi',
-
-            'nama_perusahaan.required' => 'Nama Perusahaan Harus Diisi',
-            'jabatan.required'         => 'Jabatan Harus Diisi',
-            'mulai_kerja.required'     => 'Mulai Harus Diisi',
-            'akhir_kerja.required'     => 'Akhir Harus Diisi',
-            'gaji.required'            => 'Gaji Harus Diisi',
-            'alasan_keluar.required'   => 'Alasan Keluar Harus Diisi',
-
-            'lisan.required'   => 'Pilih Nilai Keahlian',
-            'tulisan.required' => 'Pilih Nilai Keahlian'
-        ]);
-
-        $extktp = $request->ktp->getClientOriginalExtension();
-        $extkk = $request->kk->getClientOriginalExtension();
-
-        $ktp = "ktp-".time().".".$extktp;
-        $request->ktp->storeAs('public/DataKaryawan',$ktp);
-        
-        $kk = "kk-".time().".".$extkk;
-        $request->kk->storeAs('public/DataKaryawan',$kk);
-
-        $rekening = '-';
-        $sim = '-';
-        $bpjs_ketenagakerjaan = '-';
-        $bpjs_kesehatan = '-';
-        $npwp = '-';
-        $ktp_pasangan = '-';
-        if($request->hasFile('rekening')){
-            $extrekening = $request->rekening->getClientOriginalExtension();
-            $rekening = "rekening-".time().".".$extrekening;
-            $request->rekening->storeAs('public/DataKaryawan',$rekening);
+            Alert::success('Berhasil', "Data Pribadi $data_pribadi->nama_lengkap Berhasil Disimpan");
+            return redirect()->route('data_karyawan.index');
         }
-        if($request->hasFile('sim')){
-            $extsim = $request->sim->getClientOriginalExtension();
-            $sim = "sim-".time().".".$extsim;
-            $request->sim->storeAs('public/DataKaryawan',$sim);
-        }
-        if($request->hasFile('bpjs_ketenagakerjaan')){
-            $extbpjsketenagakerjaan = $request->bpjs_ketenagakerjaan->getClientOriginalExtension();
-            $bpjs_ketenagakerjaan = "bpjs_ketenagakerjaan-".time().".".$extbpjsketenagakerjaan;
-            $request->bpjs_ketenagakerjaan->storeAs('public/DataKaryawan',$bpjs_ketenagakerjaan);
-        }
-        if($request->hasFile('bpjs_kesehatan')){
-            $extbpjskesehatan = $request->bpjs_kesehatan->getClientOriginalExtension();
-            $bpjs_kesehatan = "bpjs_kesehatan-".time().".".$extbpjskesehatan;
-            $request->bpjs_kesehatan->storeAs('public/DataKaryawan',$bpjs_kesehatan);
-        }
-        if($request->hasFile('npwp')){
-            $extnpwp = $request->npwp->getClientOriginalExtension();
-            $npwp = "npwp-".time().".".$extnpwp;
-            $request->npwp->storeAs('public/DataKaryawan',$npwp);
-        }
-        if($request->hasFile('ktp_pasangan')){
-            $extktppasangan = $request->ktp_pasangan->getClientOriginalExtension();
-            $ktp_pasangan = "ktp_pasangan-".time().".".$extktppasangan;
-            $request->ktp_pasangan->storeAs('public/DataKaryawan',$ktp_pasangan);
-        }
-
-        $data_pribadi = data_pribadi::find($request->id);
-        $data_pribadi->ktp                  = $ktp;
-        $data_pribadi->rekening             = $rekening;
-        $data_pribadi->sim                  = $sim;
-        $data_pribadi->kk                   = $kk;
-        $data_pribadi->bpjs_ketenagakerjaan = $bpjs_ketenagakerjaan;
-        $data_pribadi->bpjs_kesehatan       = $bpjs_kesehatan;
-        $data_pribadi->npwp                 = $npwp;
-        $data_pribadi->nik                  = $validateData['nik_pribadi'];
-        $data_pribadi->update();
-
-        $data_keluarga_inti = new data_keluarga_inti();
-        $data_keluarga_inti->data_pribadis_id      = $request->id;
-        $data_keluarga_inti->nik                   = $validateData['nik_inti'];
-        $data_keluarga_inti->status_keluarga       = $validateData['status_keluarga_inti'];
-        $data_keluarga_inti->nama_anggota_keluarga = $validateData['nama_anggota_keluarga_inti'];
-        $data_keluarga_inti->ktp_pasangan          = $ktp_pasangan;
-        $data_keluarga_inti->tempat_lahir          = $validateData['tempat_lahir_inti'];
-        $data_keluarga_inti->tanggal_lahir         = $validateData['tanggal_lahir_inti'];
-        $data_keluarga_inti->pendidikan            = $validateData['pendidikan_inti'];
-        $data_keluarga_inti->pekerjaan             = $validateData['pekerjaan_inti'];
-        $data_keluarga_inti->save();
-
-        $data_keluarga_kandung = new data_keluarga_kandung();
-        $data_keluarga_kandung->data_pribadis_id      = $request->id;
-        $data_keluarga_kandung->status_keluarga       = $validateData['status_keluarga_kandung'];
-        $data_keluarga_kandung->nama_anggota_keluarga = $validateData['nama_anggota_keluarga_kandung'];
-        $data_keluarga_kandung->jenis_kelamin         = $validateData['jenis_kelamin_kandung'];
-        $data_keluarga_kandung->tempat_lahir          = $validateData['tempat_lahir_kandung'];
-        $data_keluarga_kandung->tanggal_lahir         = $validateData['tanggal_lahir_kandung'];
-        $data_keluarga_kandung->pendidikan            = $validateData['pendidikan_kandung'];
-        $data_keluarga_kandung->pekerjaan             = $validateData['pekerjaan_kandung'];
-        $data_keluarga_kandung->save();
-
-        $data_pendidikan = new data_pendidikan();
-        $data_pendidikan->data_pribadis_id = $request->id;
-        $data_pendidikan->jenjang          = $validateData['jenjang'];
-        $data_pendidikan->fakultas         = $validateData['fakultas'];
-        $data_pendidikan->nama_sekolah     = $validateData['nama_sekolah'];
-        $data_pendidikan->jurusan          = $validateData['jurusan'];
-        $data_pendidikan->tahun_masuk      = $validateData['tahun_masuk'];
-        $data_pendidikan->tahun_lulus      = $validateData['tahun_lulus'];
-        $data_pendidikan->save();
-
-        $pelatihan_sertifikat = new pelatihan_sertifikat();
-        $pelatihan_sertifikat->data_pribadis_id = $request->id;
-        $pelatihan_sertifikat->nama_lembaga     = $validateData['nama_lembaga'];
-        $pelatihan_sertifikat->jenis            = $validateData['jenis'];
-        $pelatihan_sertifikat->mulai            = $validateData['mulai_pelatihan'];
-        $pelatihan_sertifikat->akhir            = $validateData['akhir_pelatihan'];
-        $pelatihan_sertifikat->save();
-
-        $pengalaman_kerja = new pengalaman_kerja();
-        $pengalaman_kerja->data_pribadis_id = $request->id;
-        $pengalaman_kerja->nama_perusahaan  = $validateData['nama_perusahaan'];
-        $pengalaman_kerja->jabatan          = $validateData['jabatan'];
-        $pengalaman_kerja->mulai            = $validateData['mulai_kerja'];
-        $pengalaman_kerja->akhir            = $validateData['akhir_kerja'];
-        $pengalaman_kerja->gaji             = $validateData['gaji'];
-        $pengalaman_kerja->alasan_keluar    = $validateData['alasan_keluar'];
-        $pengalaman_kerja->save();
-
-        $bahasa_asing = new bahasa_asing();
-        $bahasa_asing->data_pribadis_id = $request->id;
-        $bahasa_asing->lisan            = $validateData['lisan'];
-        $bahasa_asing->tulisan          = $validateData['tulisan'];
-        $bahasa_asing->save();
-
-        Alert::success('Data Tersimpan', "Terima Kasih Sudah Mengisi Data");
-        return redirect()->back();   
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(data_karyawan $data_karyawan)
+    public function destroy($id)
     {
         //
+        $data_pribadi = data_pribadi::findOrFail($id);
+        User::where('no_hp', $data_pribadi->no_hp)->delete();
+        data_pribadi::where('id', $id)->delete();
+        data_keluarga_inti::where('data_pribadis_id', $id)->delete();
+        data_keluarga_kandung::where('data_pribadis_id', $id)->delete();
+        data_pendidikan::where('data_pribadis_id', $id)->delete();
+        pelatihan_sertifikat::where('data_pribadis_id', $id)->delete();
+        pengalaman_kerja::where('data_pribadis_id', $id)->delete();
+        bahasa_asing::where('data_pribadis_id', $id)->delete();
+
+        Alert::success('Berhasil', "Data Karyawan Atas Nama $data_pribadi->nama_lengkap Berhasil Dihapus");
+        return redirect()->route('data_karyawan.index');
     }
 }

@@ -17,17 +17,23 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($data_pendidikan as $item)
+                @if ($data_pendidikan->isNotEmpty())
+                    @foreach ($data_pendidikan as $item)
+                        <tr>
+                            <td>{{ $no++ }}</td>
+                            <td>{{ $item->jenjang }}</td>
+                            <td>{{ $item->fakultas }}</td>
+                            <td>{{ $item->nama_sekolah }}</td>
+                            <td>{{ $item->jurusan }}</td>
+                            <td>{{ $item->tahun_masuk }}</td>
+                            <td>{{ $item->tahun_lulus }}</td>
+                        </tr>
+                    @endforeach
+                @else
                     <tr>
-                        <td>{{ $no++ }}</td>
-                        <td>{{ $item->jenjang }}</td>
-                        <td>{{ $item->fakultas }}</td>
-                        <td>{{ $item->nama_sekolah }}</td>
-                        <td>{{ $item->jurusan }}</td>
-                        <td>{{ $item->tahun_masuk }}</td>
-                        <td>{{ $item->tahun_lulus }}</td>
+                        <td colspan="7">Belum Ada Data / User Belum Melakukan Input Data</td>
                     </tr>
-                @endforeach
+                @endif
             </tbody>
         </table>
     </div>

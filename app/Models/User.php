@@ -42,6 +42,10 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+    
+    public function data_pribadi(){
+        return $this->hasOne(data_pribadi::class, 'no_hp', 'no_hp');
+    }
 
     public function jabatan(){
         return $this->belongsTo(jabatan::class, 'jabatans_id', 'id');
