@@ -104,7 +104,7 @@ class DataPribadiController extends Controller
 
         if ($dataCount > 0) {
             Alert::error('Gagal', "Maaf Kamu Hanya Bisa Mengirim Data Sekali Saja, Silakan Hubungi Pihak IT");
-            return view('auth.login');
+            return view('data_pribadi.create');
         } else {
             $data_pribadi->save();
             Alert::success('Data Terkirim', "Terima Kasih Data Kamu Segera Di Proses");

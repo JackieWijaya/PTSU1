@@ -13,6 +13,20 @@ return new class extends Migration
     {
         Schema::create('data_pelamars', function (Blueprint $table) {
             $table->id();
+            $table->string('nama_lengkap');
+            $table->date('tanggal_lahir');
+            $table->enum('jenis_kelamin', ['Laki-Laki', 'Perempuan']);
+            $table->string('tempat_lahir');
+            $table->string('alamat');
+            $table->string('pendidikan_terakhir');
+            $table->string('no_hp');
+            $table->string('email');
+            $table->string('agama');
+            $table->string('golongan_darah');
+            $table->string('status_kawin')->nullable();
+            $table->date('tanggal_nikah')->nullable();
+            $table->string('buku_nikah')->nullable();
+            $table->enum('status', ['Diterima', 'Ditolak'])->nullable();
             $table->timestamps();
         });
     }

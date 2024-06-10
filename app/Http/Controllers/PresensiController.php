@@ -70,10 +70,10 @@ class PresensiController extends Controller
 
             $presensisblnini = Presensi::select(
                 'presensis.*',
-                'data_pribadis.nama_lengkap',
-                'jabatans.nama_jabatan')
+                'data_pribadis.nama_lengkap')
+                // 'jabatans.nama_jabatan')
                 ->join('data_pribadis', 'presensis.nik', '=', 'data_pribadis.nik')
-                ->join('jabatans', 'data_pribadis.jabatans_id', '=', 'jabatans.id')
+                // ->join('jabatans', 'data_pribadis.jabatans_id', '=', 'jabatans.id')
                 ->whereDate('presensis.created_at', $tanggal)
                 ->get();
 

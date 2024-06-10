@@ -50,6 +50,7 @@
                     @php
                         $no = 1;
                     @endphp
+                    {{-- @dd($presensis->data_pribadi); --}}
                     @foreach ($presensis as $item)
                         <tr>
                             <td>{{ $no++ }}</td>
@@ -64,7 +65,14 @@
                             </td>
                             <td>{{ $item->nik }}</td>
                             <td>{{ $item->nama_lengkap }}</td>
-                            <td>{{ $item->nama_jabatan }}</td>
+                            <td>
+                                {{-- @dd($item->data_pribadi->jabatan) --}}
+                                @if ($item->data_pribadi->jabatan == null)
+                                    -
+                                @else
+                                    {{ $item->data_pribadi->jabatan->nama_jabatan }}
+                                @endif
+                            </td>
                             <td><small class="badge badge-success">{{ $item->jumlah_kehadiran }} Kali</small></td>
                             <td><small class="badge badge-danger">{{ $item->jumlah_terlambat }} Kali</small></td>
                             <td><small class="badge badge-secondary">{{ $item->total_waktu_terlambat }}</small></td>

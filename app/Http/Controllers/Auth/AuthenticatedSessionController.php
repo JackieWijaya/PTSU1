@@ -38,7 +38,8 @@ class AuthenticatedSessionController extends Controller
             return redirect()->intended('/presensi');
         }
 
-        return redirect()->intended('/data_karyawan');
+        // return redirect()->intended('/data_karyawan');
+        return redirect()->intended(RouteServiceProvider::HOME);
     }
 
     /**

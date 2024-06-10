@@ -81,12 +81,9 @@ class JabatanController extends Controller
             'nama_jabatan.required' => 'Nama Jabatan Harus Diisi'
         ]);
 
-        $jabatan = jabatan::find($jabatan->id);
-
         $jabatan->nama_jabatan = $validateData['nama_jabatan'];
-
         $jabatan->update();
-        Alert::success('Berhasil', "Data Jabatan Dengan ID $jabatan->id Berhasil Diubah");
+        Alert::success('Berhasil', "Data Jabatan Dengan Kode $jabatan->id Berhasil Diubah");
         return redirect()->route('jabatan.index');
     }
 
@@ -96,8 +93,8 @@ class JabatanController extends Controller
     public function destroy(jabatan $jabatan)
     {
         //
-        jabatan::where('id', $jabatan->id)->delete();
-        Alert::success('Berhasil', "Data Jabatan Dengan ID $jabatan->id $jabatan->nama_jabatan Berhasil Dihapus");
+        $jabatan->delete();
+        Alert::success('Berhasil', "Data Jabatan Dengan Kode $jabatan->id $jabatan->nama_jabatan Berhasil Dihapus");
         return redirect()->route('jabatan.index');
     }
 }

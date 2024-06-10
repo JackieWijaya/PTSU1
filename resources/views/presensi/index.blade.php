@@ -370,7 +370,13 @@
                                 <td>{{ $no++ }}</td>
                                 <td>{{ $item->nik }}</td>
                                 <td>{{ $item->nama_lengkap }}</td>
-                                <td>{{ $item->nama_jabatan }}</td>
+                                <td>
+                                    @if ($item->data_pribadi->jabatan == null)
+                                        -
+                                    @else
+                                        {{ $item->data_pribadi->jabatan->nama_jabatan }}
+                                    @endif
+                                </td>
                                 <td>{{ \Carbon\Carbon::parse($item->created_at)->format('H:i:s') }}</td>
                                 <td>
                                     @if ($item->created_at == $item->updated_at)

@@ -38,7 +38,7 @@
         </div>
 
         <div class="card-body">
-            <form action="{{ route('data_pribadi.store') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('data_pelamar.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
 
                 <div class="row">
@@ -271,6 +271,7 @@
                                 @enderror
                             </div>
                         </div>
+
                     </div>
 
                     <div class="col-lg-3 col-md-6 col-sm-12 d-flex align-items-center justify-content-center">

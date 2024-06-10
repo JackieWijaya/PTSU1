@@ -47,81 +47,6 @@
     <link rel="stylesheet" href="{{ asset('/plugins/fullcalendar/main.css') }}">
 
     <link rel="shortcut icon" href="{{ asset('storage/Logo/PTSU.ico') }}" type="image/x-icon">
-
-    <script nonce="573b98b0-2106-4427-941e-6a96ea8eaf79">
-        try {
-            (function(w, d) {
-                ! function(o, p, q, r) {
-                    o[q] = o[q] || {};
-                    o[q].executed = [];
-                    o.zaraz = {
-                        deferred: [],
-                        listeners: []
-                    };
-                    o.zaraz.q = [];
-                    o.zaraz._f = function(s) {
-                        return async function() {
-                            var t = Array.prototype.slice.call(arguments);
-                            o.zaraz.q.push({
-                                m: s,
-                                a: t
-                            })
-                        }
-                    };
-                    for (const u of ["track", "set", "debug"]) o.zaraz[u] = o.zaraz._f(u);
-                    o.zaraz.init = () => {
-                        var v = p.getElementsByTagName(r)[0],
-                            w = p.createElement(r),
-                            x = p.getElementsByTagName("title")[0];
-                        x && (o[q].t = p.getElementsByTagName("title")[0].text);
-                        o[q].x = Math.random();
-                        o[q].w = o.screen.width;
-                        o[q].h = o.screen.height;
-                        o[q].j = o.innerHeight;
-                        o[q].e = o.innerWidth;
-                        o[q].l = o.location.href;
-                        o[q].r = p.referrer;
-                        o[q].k = o.screen.colorDepth;
-                        o[q].n = p.characterSet;
-                        o[q].o = (new Date).getTimezoneOffset();
-                        if (o.dataLayer)
-                            for (const B of Object.entries(Object.entries(dataLayer).reduce(((C, D) => ({
-                                    ...C[1],
-                                    ...D[1]
-                                })), {}))) zaraz.set(B[0], B[1], {
-                                scope: "page"
-                            });
-                        o[q].q = [];
-                        for (; o.zaraz.q.length;) {
-                            const E = o.zaraz.q.shift();
-                            o[q].q.push(E)
-                        }
-                        w.defer = !0;
-                        for (const F of [localStorage, sessionStorage]) Object.keys(F || {}).filter((H => H
-                            .startsWith("_zaraz_"))).forEach((G => {
-                            try {
-                                o[q]["z_" + G.slice(7)] = JSON.parse(F.getItem(G))
-                            } catch {
-                                o[q]["z_" + G.slice(7)] = F.getItem(G)
-                            }
-                        }));
-                        w.referrerPolicy = "origin";
-                        w.src = "/cdn-cgi/zaraz/s.js?z=" + btoa(encodeURIComponent(JSON.stringify(o[q])));
-                        v.parentNode.insertBefore(w, v)
-                    };
-                    ["complete", "interactive"].includes(p.readyState) ? zaraz.init() : o.addEventListener(
-                        "DOMContentLoaded", zaraz.init)
-                }(w, d, "zarazData", "script");
-            })(window, document)
-        } catch (err) {
-            console.error('Failed to run Cloudflare Zaraz: ', err)
-            fetch('/cdn-cgi/zaraz/t', {
-                credentials: 'include',
-                keepalive: true,
-                method: 'GET',
-            })
-        };
-    </script>
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
@@ -213,7 +138,15 @@
                                 </a>
                                 <ul class="nav nav-treeview">
                                     <li class="nav-item">
-                                        <a href="{{ url('jabatan') }}" class="nav-link">
+                                        <a href="{{ url('devisi') }}"
+                                            class="nav-link {{ Request::is('devisi*') ? 'active' : '' }}">
+                                            <i class="far fa-circle nav-icon"></i>
+                                            <p>Devisi</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="{{ url('jabatan') }}"
+                                            class="nav-link {{ Request::is('jabatan*') ? 'active' : '' }}">
                                             <i class="far fa-circle nav-icon"></i>
                                             <p>Jabatan</p>
                                         </a>
@@ -222,7 +155,8 @@
                             </li>
 
                             <li class="nav-item">
-                                <a href="{{ url('data_pelamar') }}" class="nav-link">
+                                <a href="{{ url('data_pelamar') }}"
+                                    class="nav-link {{ Request::is('data_pelamar*') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-file-contract"></i>
                                     <p>
                                         Data Pelamar
@@ -232,7 +166,8 @@
                         @endif
 
                         <li class="nav-item">
-                            <a href="{{ url('data_karyawan') }}" class="nav-link">
+                            <a href="{{ url('data_karyawan') }}"
+                                class="nav-link {{ Request::is('data_karyawan*') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-address-card"></i>
                                 <p>
                                     Data Karyawan
@@ -241,7 +176,8 @@
                         </li>
 
                         <li class="nav-item">
-                            <a href="{{ url('presensi') }}" class="nav-link">
+                            <a href="{{ url('presensi') }}"
+                                class="nav-link {{ Request::is('presensi*') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-calendar-check"></i>
                                 <p>
                                     Presensi
@@ -251,7 +187,8 @@
 
                         @if (Auth::user()->role == 'HRD')
                             <li class="nav-item">
-                                <a href="{{ url('rekap_presensi') }}" class="nav-link">
+                                <a href="{{ url('rekap_presensi') }}"
+                                    class="nav-link {{ Request::is('rekap_presensi*') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-layer-group"></i>
                                     <p>
                                         Rekap Presensi
@@ -271,14 +208,16 @@
                             <ul class="nav nav-treeview">
                                 @if (Auth::user()->role == 'HRD')
                                     <li class="nav-item">
-                                        <a href="{{ url('pengaturan_presensi') }}" class="nav-link">
+                                        <a href="{{ url('pengaturan_presensi') }}"
+                                            class="nav-link {{ Request::is('pengaturan_presensi*') ? 'active' : '' }}">
                                             <i class="far fa-circle nav-icon"></i>
                                             <p>Presensi</p>
                                         </a>
                                     </li>
                                 @endif
                                 <li class="nav-item">
-                                    <a href="{{ url('profil') }}" class="nav-link">
+                                    <a href="{{ url('profil') }}"
+                                        class="nav-link {{ Request::is('profil*') ? 'active' : '' }}">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Profil</p>
                                     </a>
@@ -305,9 +244,9 @@
 
         </aside>
 
-        <div class="content-wrapper">
+        <div class="content-wrapper pt-2">
 
-            <section class="content mt-2">
+            <section class="content">
                 @yield('content')
             </section>
 
@@ -327,7 +266,6 @@
     </div>
 
     <script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
-
     <script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 
     <script src="{{ asset('/plugins/datatables/jquery.dataTables.min.js') }}"></script>

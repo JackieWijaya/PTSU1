@@ -31,9 +31,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($data_pribadis as $item)
+                    @foreach ($data_pelamars as $item)
                         <tr>
-                            {{-- @dd($item); --}}
                             <td>{{ $no++ }}</td>
                             <td>
                                 <button id="info" class="btn btn-sm btn-info" data-toggle="modal" data-target="#infoModal"
@@ -150,19 +149,6 @@
                 let tanggal_lamar = $(this).attr('data-tgllamar');
                 let status = $(this).attr('data-status');
 
-                // let jenis_kelamin_text;
-                // switch (jenis_kelamin) {
-                //     case 'laki-laki':
-                //         jenis_kelamin_text = 'Laki-Laki';
-                //         break;
-                //     case 'perempuan':
-                //         jenis_kelamin_text = 'Perempuan';
-                //         break;
-                //     default:
-                //         jenis_kelamin_text = '-';
-                //         break;
-                // }
-
                 // Mengonversi status kawin menjadi teks yang sesuai
                 let status_kawin_text;
                 switch (status_kawin) {
@@ -234,5 +220,12 @@
                 $('#status').removeClass().addClass(status_badge_class).text(status_text);
             })
         })
+    </script>
+    <script>
+        window.onpageshow = function(event) {
+            if (event.persisted) {
+                window.location.reload(); // Muat ulang halaman jika dimuat dari cache
+            }
+        };
     </script>
 @endsection

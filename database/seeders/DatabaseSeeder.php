@@ -4,8 +4,9 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\User;
+use App\Models\devisi;
 use App\Models\jabatan;
-use App\Models\data_pribadi;
+use App\Models\data_pelamar;
 use App\Models\pengaturan_presensi;
 use Illuminate\Database\Seeder;
 
@@ -22,6 +23,7 @@ class DatabaseSeeder extends Seeder
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
+
         User::query()->create([
             'name'     => 'HRD',
             'no_hp'    => '081234567890',
@@ -37,6 +39,22 @@ class DatabaseSeeder extends Seeder
             'name'     => 'Martin',
             'no_hp'    => '085678901234',
             'password' => '085678901234',
+        ]);
+
+        devisi::query()->create([
+            'nama_devisi' => 'Keuangan',
+        ]);
+        devisi::query()->create([
+            'nama_devisi' => 'Personalia & Umum',
+        ]);
+        devisi::query()->create([
+            'nama_devisi' => 'Pemasaran & Penjualan',
+        ]);
+        devisi::query()->create([
+            'nama_devisi' => 'Operasional',
+        ]);
+        devisi::query()->create([
+            'nama_devisi' => 'Bengkel',
         ]);
 
         jabatan::query()->create([
@@ -73,7 +91,7 @@ class DatabaseSeeder extends Seeder
             'nama_jabatan' => 'Gudang',
         ]);
 
-        data_pribadi::query()->create([
+        data_pelamar::query()->create([
             'nama_lengkap'        => 'Jackie',
             'tanggal_lahir'       => '2002-06-19',
             'jenis_kelamin'       => 'Laki-Laki',
@@ -84,9 +102,10 @@ class DatabaseSeeder extends Seeder
             'email'               => 'jackie@gmail.com',
             'agama'               => 'Buddha',
             'golongan_darah'      => 'A',
+            'status_kawin'        => 'TK',
         ]);
 
-        data_pribadi::query()->create([
+        data_pelamar::query()->create([
             'nama_lengkap'        => 'Budi',
             'tanggal_lahir'       => '2002-12-12',
             'jenis_kelamin'       => 'Laki-Laki',
@@ -97,10 +116,11 @@ class DatabaseSeeder extends Seeder
             'email'               => 'budi@gmail.com',
             'agama'               => 'Islam',
             'golongan_darah'      => 'B',
+            'status_kawin'        => 'TK',
             'status'              => 'Diterima',
         ]);
 
-        data_pribadi::query()->create([
+        data_pelamar::query()->create([
             'nama_lengkap'        => 'Dewi',
             'tanggal_lahir'       => '2002-06-12',
             'jenis_kelamin'       => 'Perempuan',
@@ -111,11 +131,15 @@ class DatabaseSeeder extends Seeder
             'email'               => 'dewi@gmail.com',
             'agama'               => 'Islam',
             'golongan_darah'      => 'O',
+            'status_kawin'        => 'K0',
+            'tanggal_nikah'       => '2020-06-12',
+            'buku_nikah'          => 'DEWI.jpg',
+            'status'              => 'Diterima',
         ]);
 
-        data_pribadi::query()->create([
+        data_pelamar::query()->create([
             'nama_lengkap'        => 'Yanto',
-            'tanggal_lahir'       => '2002-02-7',
+            'tanggal_lahir'       => '2002-02-07',
             'jenis_kelamin'       => 'Laki-Laki',
             'tempat_lahir'        => 'Palembang',
             'alamat'              => 'Jalan Abdul Rozak No. 126',
@@ -124,10 +148,14 @@ class DatabaseSeeder extends Seeder
             'email'               => 'yanto@gmail.com',
             'agama'               => 'Islam',
             'golongan_darah'      => 'A',
+            'status_kawin'        => 'K2',
+            'tanggal_nikah'       => '2020-02-07',
+            'buku_nikah'          => 'YANTO.jpg',
+            'status'              => 'Ditolak',
         ]);
 
-        data_pribadi::query()->create([
-            'nama_lengkap'        => 'Martin',
+        data_pelamar::query()->create([
+            'nama_lengkap'        => 'M. Fadli Yuda',
             'tanggal_lahir'       => '2002-03-13',
             'jenis_kelamin'       => 'Laki-Laki',
             'tempat_lahir'        => 'Palembang',
@@ -137,6 +165,9 @@ class DatabaseSeeder extends Seeder
             'email'               => 'dewi@gmail.com',
             'agama'               => 'Islam',
             'golongan_darah'      => 'A',
+            'status_kawin'        => 'K1',
+            'tanggal_nikah'       => '2020-03-13',
+            'buku_nikah'          => 'M. FADLI YUDA.jpg',
             'status'              => 'Diterima',
         ]);
 

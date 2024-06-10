@@ -29,18 +29,19 @@ class RekapPresensiController extends Controller
         $presensis = Presensi::select(
                 'presensis.*',
                 'data_pribadis.nama_lengkap',
-                'jabatans.nama_jabatan',
+                // 'jabatans.nama_jabatan',
                 'users.foto',
                 DB::raw('count(presensis.nik) as jumlah_kehadiran'),
                 DB::raw("SUM(CASE WHEN TIME(presensis.created_at) > '$jam_terlambat' THEN 1 ELSE 0 END) as jumlah_terlambat")
             )
             ->join('data_pribadis', 'presensis.nik', '=', 'data_pribadis.nik')
             ->join('users', 'data_pribadis.no_hp', '=', 'users.no_hp')
-            ->join('jabatans', 'data_pribadis.jabatans_id', '=', 'jabatans.id')
+            // ->join('jabatans', 'data_pribadis.jabatans_id', '=', 'jabatans.id')
             ->whereYear('presensis.created_at', $tahun)
             ->whereMonth('presensis.created_at', $bulan)
             ->groupBy('presensis.nik')
             ->get();
+            // dd($presensis);
 
         // Hitung total waktu terlambat untuk setiap karyawan
         foreach ($presensis as $presensi) {

@@ -17,11 +17,11 @@
         }
     </style>
 
-    {{-- <a href="{{ url('jabatan') }}" class="btn btn-primary"><i class="fa fa-arrow-left"></i> Kembali</a> --}}
+    <a href="{{ url('jabatan') }}" class="btn btn-primary btn-block mb-2"><i class="fa fa-arrow-left"></i> Kembali</a>
 
-    <div class="card mt-2">
+    <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Tambah Data Jabatan</h3>
+            <h3 class="card-title">Tambah Jabatan</h3>
         </div>
         <div class="card-body">
             <form action="{{ route('jabatan.store') }}" method="POST" enctype="multipart/form-data">
@@ -40,7 +40,8 @@
                     </div>
                 </div>
 
-                <button type="submit" id="btnSimpan" class="btn btn-primary">Simpan</button>
+                <button type="submit" class="btn btn-primary">Simpan</button>
+
             </form>
         </div>
     </div>
