@@ -17,6 +17,7 @@
                     <th>Email</th>
                     <th>No HP</th>
                     <th>Jabatan</th>
+                    <th>Status</th>
                     <th>#</th>
                 </tr>
             </thead>
@@ -49,6 +50,13 @@
                                     class="btn btn-sm btn-primary input-btn">Input</a>
                             @else
                                 {{ $item->jabatan->nama_jabatan }}
+                            @endif
+                        </td>
+                        <td>
+                            @if ($item->status_user == 'Aktif')
+                                <small class="badge badge-success">{{ $item->status_user }}</small>
+                            @else
+                                <small class="badge badge-danger">{{ $item->status_user }}</small>
                             @endif
                         </td>
                         <td>
@@ -85,14 +93,13 @@
                 <div class="modal-body" id="mb-konfirmasi-edit"></div>
                 <div class="modal-footer justify-content-between">
                     <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-outline-dark" name="status_isi" value="0">Ya,
+                    <button type="submit" class="btn btn-outline-dark" name="status_isi" value="2">Ya,
                         Yakin</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
-
 
 <div class="modal fade" id="deleteModal">
     <div class="modal-dialog">
@@ -141,17 +148,24 @@
 </script>
 
 <script>
-    // generate alamat URL untuk proses hapus data 
     $('.btn-edit').click(function() {
         let id = $(this).attr('data-id');
         $('#formEdit').attr('action', '/data_karyawan/' + id);
 
         let nik = $(this).attr('data-nik');
         let nama = $(this).attr('data-nama');
-        $('#mb-konfirmasi-edit').text("Apakah Anda Yakin Ingin Membuka Akses Edit Data Karyawan Dengan NIK " +
-            nik +
-            " Atas Nama " +
-            nama + " ?");
+
+        if (nik !== '') {
+            $('#mb-konfirmasi-edit').text(
+                "Apakah Anda Yakin Ingin Membuka Akses Edit Data Karyawan Dengan NIK " +
+                nik +
+                " Atas Nama " +
+                nama + " ?");
+        } else {
+            $('#mb-konfirmasi-edit').text(
+                "Apakah Anda Yakin Ingin Membuka Akses Edit Data Karyawan Dengan NIK - Atas Nama " +
+                nama + " ?");
+        }
     })
 
     $('#formEdit [type="submit"]').click(function() {
@@ -165,9 +179,16 @@
 
         let nik = $(this).attr('data-nik');
         let nama = $(this).attr('data-nama');
-        $('#mb-konfirmasi-hapus').text("Apakah Anda Yakin Ingin Menghapus Data Karyawan Dengan NIK " + nik +
-            " Atas Nama " +
-            nama + " ?");
+
+        if (nik !== '') {
+            $('#mb-konfirmasi-hapus').text("Apakah Anda Yakin Ingin Menghapus Data Karyawan Dengan NIK " + nik +
+                " Atas Nama " +
+                nama + " ?");
+        } else {
+            $('#mb-konfirmasi-hapus').text(
+                "Apakah Anda Yakin Ingin Membuka Akses Edit Data Karyawan Dengan NIK - Atas Nama " +
+                nama + " ?");
+        }
     })
 
     $('#formDelete [type="submit"]').click(function() {

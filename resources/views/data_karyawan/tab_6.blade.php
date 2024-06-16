@@ -1,9 +1,5 @@
-@php
-    $no = 1;
-@endphp
-
 <div class="card">
-    <div class="card-body table-responsive">
+    <div class="card-body">
         <table id="example2" class="table table-bordered table-striped">
             <thead>
                 <tr>

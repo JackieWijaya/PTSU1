@@ -311,20 +311,28 @@
 
     <script>
         $(function() {
-            $("#example1").DataTable({
-                "responsive": true,
-                "lengthChange": false,
-                "autoWidth": false,
-                "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-            }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-            $('#example2').DataTable({
-                "paging": true,
-                "lengthChange": false,
-                "searching": false,
-                "ordering": true,
-                "info": true,
-                "autoWidth": false,
-                "responsive": true,
+            // Inisialisasi DataTable pada semua elemen dengan kelas .datatable
+            $("table[id^='example1']").each(function() {
+                $(this).DataTable({
+                    "responsive": true,
+                    "lengthChange": false,
+                    "autoWidth": false,
+                    "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+                }).buttons().container().appendTo($(this).closest('.dataTables_wrapper').find(
+                    '.col-md-6:eq(0)'));
+            });
+
+            // Inisialisasi DataTable pada semua elemen dengan kelas .datatable-simple
+            $("table[id^='example2']").each(function() {
+                $(this).DataTable({
+                    "paging": true,
+                    "lengthChange": false,
+                    "searching": false,
+                    "ordering": true,
+                    "info": true,
+                    "autoWidth": false,
+                    "responsive": true,
+                });
             });
         });
     </script>

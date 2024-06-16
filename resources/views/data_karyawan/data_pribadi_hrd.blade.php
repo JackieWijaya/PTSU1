@@ -17,7 +17,7 @@
         }
     </style>
 
-    <div class="card mt-2">
+    <div class="card">
         <div class="card-header">
             <h3 class="card-title">Data Pribadi {{ $data_pribadi->nama_lengkap }}</h3>
         </div>
@@ -30,10 +30,9 @@
                 <div class="row">
                     <div class="form-group col-lg-3 col-md-3 col-sm-6">
                         <label for="nik_pribadi">NIK</label>
-
                         <input type="text" class="form-control @error('nik_pribadi') is-invalid @enderror"
-                            name="nik_pribadi" id="nik_pribadi" value="{{ $data_pribadi->nik }}" pattern="[0-9]+"
-                            title="Masukkan hanya angka" placeholder="Enter NIK" disabled>
+                            name="nik_pribadi" id="nik_pribadi" value="{{ $data_pribadi->nik ?? '-' }}" pattern="[0-9]+"
+                            title="Masukkan hanya angka" placeholder="Masukkan NIK" disabled>
 
                         @error('nik_pribadi')
                             <div class="text-danger">{{ $message }}</div>
@@ -102,8 +101,13 @@
 
                     <div class="form-group col-lg-3 col-md-3 col-sm-6">
                         <label for="devisi">Devisi</label>
-                        <input type="text" class="form-control @error('devisi') is-invalid @enderror" name="devisi"
-                            id="devisi"value="{{ old('devisi') }}" placeholder="Enter Devisi">
+                        <select name="devisi" id="devisi" class="form-control @error('devisi') is-invalid @enderror">
+                            <option value="">-- Pilih Devisi --</option>
+                            @foreach ($devisis as $item)
+                                <option value="{{ $item->id }}" {{ old('devisi') == $item->id ? 'selected' : '' }}>
+                                    {{ $item->nama_devisi }} </option>
+                            @endforeach
+                        </select>
 
                         @error('devisi')
                             <div class="text-danger">{{ $message }}</div>

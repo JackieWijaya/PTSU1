@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\devisi;
 use App\Models\jabatan;
 use App\Models\data_pelamar;
+use App\Models\data_pribadi;
 use App\Models\pengaturan_presensi;
 use Illuminate\Database\Seeder;
 
@@ -36,7 +37,12 @@ class DatabaseSeeder extends Seeder
             'password' => '082345678901',
         ]);
         User::query()->create([
-            'name'     => 'Martin',
+            'name'     => 'Dewi',
+            'no_hp'    => '083456789012',
+            'password' => '083456789012',
+        ]);
+        User::query()->create([
+            'name'     => 'M. Fadli Yuda',
             'no_hp'    => '085678901234',
             'password' => '085678901234',
         ]);
@@ -104,7 +110,6 @@ class DatabaseSeeder extends Seeder
             'golongan_darah'      => 'A',
             'status_kawin'        => 'TK',
         ]);
-
         data_pelamar::query()->create([
             'nama_lengkap'        => 'Budi',
             'tanggal_lahir'       => '2002-12-12',
@@ -119,7 +124,6 @@ class DatabaseSeeder extends Seeder
             'status_kawin'        => 'TK',
             'status'              => 'Diterima',
         ]);
-
         data_pelamar::query()->create([
             'nama_lengkap'        => 'Dewi',
             'tanggal_lahir'       => '2002-06-12',
@@ -136,7 +140,6 @@ class DatabaseSeeder extends Seeder
             'buku_nikah'          => 'DEWI.jpg',
             'status'              => 'Diterima',
         ]);
-
         data_pelamar::query()->create([
             'nama_lengkap'        => 'Yanto',
             'tanggal_lahir'       => '2002-02-07',
@@ -153,7 +156,6 @@ class DatabaseSeeder extends Seeder
             'buku_nikah'          => 'YANTO.jpg',
             'status'              => 'Ditolak',
         ]);
-
         data_pelamar::query()->create([
             'nama_lengkap'        => 'M. Fadli Yuda',
             'tanggal_lahir'       => '2002-03-13',
@@ -162,13 +164,60 @@ class DatabaseSeeder extends Seeder
             'alamat'              => 'Jalan Anggrek Lr. Damai No. 16',
             'pendidikan_terakhir' => 'S1',
             'no_hp'               => '085678901234',
-            'email'               => 'dewi@gmail.com',
+            'email'               => 'fadli@gmail.com',
             'agama'               => 'Islam',
             'golongan_darah'      => 'A',
             'status_kawin'        => 'K1',
             'tanggal_nikah'       => '2020-03-13',
             'buku_nikah'          => 'M. FADLI YUDA.jpg',
             'status'              => 'Diterima',
+        ]);
+
+        data_pribadi::query()->create([
+            'users_id'            => '2',
+            'nama_lengkap'        => 'Budi',
+            'tanggal_lahir'       => '2002-12-12',
+            'jenis_kelamin'       => 'Laki-Laki',
+            'tempat_lahir'        => 'Palembang',
+            'alamat'              => 'Jalan Mawar No. 1',
+            'pendidikan_terakhir' => 'SMA',
+            'no_hp'               => '082345678901',
+            'email'               => 'budi@gmail.com',
+            'agama'               => 'Islam',
+            'golongan_darah'      => 'B',
+            'status_kawin'        => 'TK',
+        ]);
+        data_pribadi::query()->create([
+            'users_id'            => '3',
+            'nama_lengkap'        => 'Dewi',
+            'tanggal_lahir'       => '2002-06-12',
+            'jenis_kelamin'       => 'Perempuan',
+            'tempat_lahir'        => 'Palembang',
+            'alamat'              => 'Jalan Anggrek Lr. Damai No. 126',
+            'pendidikan_terakhir' => 'S1',
+            'no_hp'               => '083456789012',
+            'email'               => 'dewi@gmail.com',
+            'agama'               => 'Islam',
+            'golongan_darah'      => 'O',
+            'status_kawin'        => 'K0',
+            'tanggal_nikah'       => '2020-06-12',
+            'buku_nikah'          => 'DEWI.jpg',
+        ]);
+        data_pribadi::query()->create([
+            'users_id'            => '4',
+            'nama_lengkap'        => 'M. Fadli Yuda',
+            'tanggal_lahir'       => '2002-03-13',
+            'jenis_kelamin'       => 'Laki-Laki',
+            'tempat_lahir'        => 'Palembang',
+            'alamat'              => 'Jalan Anggrek Lr. Damai No. 16',
+            'pendidikan_terakhir' => 'S1',
+            'no_hp'               => '085678901234',
+            'email'               => 'fadli@gmail.com',
+            'agama'               => 'Islam',
+            'golongan_darah'      => 'A',
+            'status_kawin'        => 'K1',
+            'tanggal_nikah'       => '2020-03-13',
+            'buku_nikah'          => 'M. FADLI YUDA.jpg',
         ]);
 
         pengaturan_presensi::query()->create([

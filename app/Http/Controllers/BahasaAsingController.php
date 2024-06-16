@@ -39,15 +39,7 @@ class BahasaAsingController extends Controller
     {
         //
         $status_isi = $request->input('status_isi');
-        // if($status_isi == '1'){
-        //     $bahasa_asing = bahasa_asing::where('data_pribadis_id', $request->id)->get();
-        //     // Loop melalui setiap entri dan perbarui status_isi
-        //     foreach ($bahasa_asing as $data) {
-        //         $data->status_isi = $status_isi;
-        //         $data->update();
-        //     }
-        //     return redirect('data_karyawan');
-        // } else {
+
         // 1. Validasi
         $validateData = $request->validate([
             'lisan'   => 'required',
@@ -66,8 +58,7 @@ class BahasaAsingController extends Controller
         $bahasa_asing->save();
 
         Alert::success('Data Tersimpan', "Terima Kasih Sudah Mengisi Data");
-        return redirect()->route('data_karyawan.index');
-        // }
+        return redirect('data_karyawan');
     }
 
     /**
@@ -89,9 +80,35 @@ class BahasaAsingController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, bahasa_asing $bahasa_asing)
+    public function update(Request $request)
     {
         //
+        $status_isi = $request->input('status_isi');
+        $bahasa_asing = bahasa_asing::where('data_pribadis_id', $request->data_pribadi_id)->first();
+        if ($status_isi == '1') {
+            $bahasa_asing->status_isi = $status_isi;
+            $bahasa_asing->save();
+            
+            Alert::success('Data Tersimpan', "Terima Kasih Sudah Mengisi Data");
+            return redirect('data_karyawan');
+        } else {
+            // 1. Validasi
+            $validateData = $request->validate([
+                'lisan'   => 'required',
+                'tulisan' => 'required'
+            ],
+            [
+                'lisan.required'   => 'Pilih Nilai Keahlian',
+                'tulisan.required' => 'Pilih Nilai Keahlian'
+            ]);
+
+            $bahasa_asing->lisan   = $validateData['lisan'];
+            $bahasa_asing->tulisan = $validateData['tulisan'];
+            $bahasa_asing->save();
+
+            Alert::success('Data Tersimpan', "Terima Kasih Sudah Mengisi Data");
+            return redirect('data_karyawan?tab=tab_7');
+        }
     }
 
     /**

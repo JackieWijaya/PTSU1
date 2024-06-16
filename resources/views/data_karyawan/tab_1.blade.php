@@ -30,7 +30,13 @@
                     <th>Tempat Lahir</th>
                     <td>{{ $data_pribadi->tempat_lahir }}</td>
                     <th>Tanggal Lahir</th>
-                    <td>{{ \Carbon\Carbon::parse($data_pribadi->tanggal_lahir)->format('d F Y') }}</td>
+                    <td>
+                        @if ($data_pribadi->tanggal_lahir == '-')
+                            -
+                        @else
+                            {{ \Carbon\Carbon::parse($data_pribadi->tanggal_lahir)->format('d F Y') }}
+                        @endif
+                    </td>
                 </tr>
                 <tr>
                     <th>Jenis Kelamin</th>
@@ -155,10 +161,10 @@
                 <tr>
                     <th>Devisi</th>
                     <td>
-                        @if (is_null($data_pribadi->devisi) || $data_pribadi->devisi === '')
+                        @if (is_null($data_pribadi->devisis_id) || $data_pribadi->devisis_id === '')
                             -
                         @else
-                            {{ $data_pribadi->devisi }}
+                            {{ $data_pribadi->devisi->nama_devisi }}
                         @endif
                     </td>
                     <th>Golongan</th>

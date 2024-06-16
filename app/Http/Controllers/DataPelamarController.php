@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\data_pelamar;
+use App\Models\data_pribadi;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -150,6 +151,25 @@ class DataPelamarController extends Controller
             $user->no_hp    = $data_pelamar->no_hp;
             $user->password = $data_pelamar->no_hp;
             $user->save();  
+
+            $user = User::where('no_hp', $data_pelamar->no_hp)->first();
+
+            $data_pribadi = New data_pribadi();
+            $data_pribadi->users_id            = $user->id;
+            $data_pribadi->nama_lengkap        = $data_pelamar->nama_lengkap;
+            $data_pribadi->jenis_kelamin       = $data_pelamar->jenis_kelamin;
+            $data_pribadi->tanggal_lahir       = $data_pelamar->tanggal_lahir;
+            $data_pribadi->tempat_lahir        = $data_pelamar->tempat_lahir;
+            $data_pribadi->no_hp               = $data_pelamar->no_hp;
+            $data_pribadi->email               = $data_pelamar->email;
+            $data_pribadi->alamat              = $data_pelamar->alamat;
+            $data_pribadi->pendidikan_terakhir = $data_pelamar->pendidikan_terakhir;
+            $data_pribadi->agama               = $data_pelamar->agama;
+            $data_pribadi->golongan_darah      = $data_pelamar->golongan_darah;
+            $data_pribadi->status_kawin        = $data_pelamar->status_kawin;
+            $data_pribadi->tanggal_nikah       = $data_pelamar->tanggal_nikah;
+            $data_pribadi->buku_nikah          = $data_pelamar->buku_nikah;
+            $data_pribadi->save();
 
             // Modifikasi nomor WA
             $no_hp = $user->no_hp;

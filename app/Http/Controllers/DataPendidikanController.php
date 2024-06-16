@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\data_pendidikan;
 use App\Models\data_pribadi;
+use App\Models\data_tampung;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -40,13 +41,25 @@ class DataPendidikanController extends Controller
         //
         $status_isi = $request->input('status_isi');
         if($status_isi == '1'){
-            $data_pendidikan = data_pendidikan::where('data_pribadis_id', $request->id)->get();
-            // Loop melalui setiap entri dan perbarui status_isi
-            foreach ($data_pendidikan as $data) {
-                $data->status_isi = $status_isi;
-                $data->update();
+            $data_tampung = data_tampung::all();
+            foreach ($data_tampung as $data) {
+                // Buat entri baru di data_keluarga_inti
+                $data_pendidikan = new data_pendidikan();
+                $data_pendidikan->data_pribadis_id = $request->id;
+                $data_pendidikan->jenjang          = $data->jenjang;
+                $data_pendidikan->fakultas         = $data->fakultas;
+                $data_pendidikan->nama_sekolah     = $data->nama_sekolah;
+                $data_pendidikan->jurusan          = $data->jurusan;
+                $data_pendidikan->tahun_masuk      = $data->tahun_masuk;
+                $data_pendidikan->tahun_lulus      = $data->tahun_lulus;
+                $data_pendidikan->status_isi       = $status_isi;
+                $data_pendidikan->save();
             }
-            return redirect('pelatihan_sertifikat');
+            // Hapus data_tampung
+            data_tampung::truncate();
+            
+            Alert::success('Data Tersimpan', "Terima Kasih Sudah Mengisi Data");
+            return redirect('data_karyawan?tab=tab_5');
         } else {
             // 1. Validasi
             $validateData = $request->validate([
@@ -66,19 +79,16 @@ class DataPendidikanController extends Controller
                 'tahun_lulus.required'  => 'Tahun Lulus Harus Diisi'
             ]);
 
-            $data_pendidikan = new data_pendidikan();
-            $data_pendidikan->data_pribadis_id = $request->id;
-            $data_pendidikan->jenjang          = $validateData['jenjang'];
-            $data_pendidikan->fakultas         = $validateData['fakultas'];
-            $data_pendidikan->nama_sekolah     = $validateData['nama_sekolah'];
-            $data_pendidikan->jurusan          = $validateData['jurusan'];
-            $data_pendidikan->tahun_masuk      = $validateData['tahun_masuk'];
-            $data_pendidikan->tahun_lulus      = $validateData['tahun_lulus'];
-            $data_pendidikan->status_isi       = $status_isi;
-            $data_pendidikan->save();
+            $data_tampung = new data_tampung();
+            $data_tampung->jenjang          = $validateData['jenjang'];
+            $data_tampung->fakultas         = $validateData['fakultas'];
+            $data_tampung->nama_sekolah     = $validateData['nama_sekolah'];
+            $data_tampung->jurusan          = $validateData['jurusan'];
+            $data_tampung->tahun_masuk      = $validateData['tahun_masuk'];
+            $data_tampung->tahun_lulus      = $validateData['tahun_lulus'];
+            $data_tampung->save();
 
-            Alert::success('Data Tersimpan', "Terima Kasih Sudah Mengisi Data");
-            return redirect()->route('data_pendidikan.index');
+            return redirect('data_karyawan?tab=tab_4');
         }
     }
 
@@ -101,9 +111,52 @@ class DataPendidikanController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, data_pendidikan $data_pendidikan)
+    public function update(Request $request)
     {
         //
+        $status_isi = $request->input('status_isi');
+        if($status_isi == '1'){
+            $data_pendidikan = data_pendidikan::where('data_pribadis_id', $request->data_pribadi_id)->get();
+            
+            // Update status_isi for each entry
+            foreach ($data_pendidikan as $item) {
+                $item->status_isi = $status_isi;
+                $item->save();  // Save each entry individually
+            }
+            
+            Alert::success('Data Tersimpan', "Terima Kasih Sudah Mengisi Data");
+            return redirect('data_karyawan?tab=tab_5');
+        } else {
+            // 1. Validasi
+            $validateData = $request->validate([
+                'jenjang'      => 'required',
+                'fakultas'     => 'required',
+                'nama_sekolah' => 'required',
+                'jurusan'      => 'required',
+                'tahun_masuk'  => 'required',
+                'tahun_lulus'  => 'required'
+            ],
+            [
+                'jenjang.required'      => 'Pilih Jenjang',
+                'fakultas.required'     => 'Fakultas Harus Diisi',
+                'nama_sekolah.required' => 'Nama Sekolah Harus Diisi',
+                'jurusan.required'      => 'Jurusan Harus Diisi',
+                'tahun_masuk.required'  => 'Tahun Masuk Harus Diisi',
+                'tahun_lulus.required'  => 'Tahun Lulus Harus Diisi'
+            ]);
+
+            $data_pendidikan = data_pendidikan::where('id', $request->id)->first();
+            $data_pendidikan->jenjang          = $validateData['jenjang'];
+            $data_pendidikan->fakultas         = $validateData['fakultas'];
+            $data_pendidikan->nama_sekolah     = $validateData['nama_sekolah'];
+            $data_pendidikan->jurusan          = $validateData['jurusan'];
+            $data_pendidikan->tahun_masuk      = $validateData['tahun_masuk'];
+            $data_pendidikan->tahun_lulus      = $validateData['tahun_lulus'];
+            $data_pendidikan->save();
+
+            Alert::success('Data Tersimpan', "Terima Kasih Sudah Mengisi Data");
+            return redirect('data_karyawan?tab=tab_4');
+        }
     }
 
     /**

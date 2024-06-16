@@ -4,10 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\data_pribadi;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
 use RealRashid\SweetAlert\Facades\Alert;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 
 class DataPribadiController extends Controller
 {
@@ -142,6 +141,8 @@ class DataPribadiController extends Controller
             $tanggal_nikah = null; // Set to null if empty or '-'
         }
 
+        $status_isi = $data_pribadi->status_isi;
+
         // 1. Validasi
         $validateData = $request->validate([
             'nama_lengkap'         => 'required', 
@@ -156,19 +157,34 @@ class DataPribadiController extends Controller
             'golongan_darah'       => 'required', 
             'status_kawin'         => 'required',
             'buku_nikah'           => 'image|max:800|mimes:jpg,jpeg,png',
-            'nik_pribadi'          => 'required|numeric|gt:-1',
-            'ktp'                  => 'required|image|max:800|mimes:jpg,jpeg,png',
+            'nik'                  => [
+                'required',
+                'numeric',
+                'gt:-1',
+                'digits_between:16,17',
+                Rule::unique('data_pribadis')->ignore($status_isi == 2 ? $data_pribadi->id : null)
+            ],
+            'ktp'                  => [
+                'image',
+                'max:800',
+                'mimes:jpg,jpeg,png',
+                Rule::requiredIf($status_isi != 2)
+            ],
             'rekening'             => 'image|max:800|mimes:jpg,jpeg,png',
             'sim'                  => 'image|max:800|mimes:jpg,jpeg,png',
-            'kk'                   => 'required|image|max:800|mimes:jpg,jpeg,png',
+            'kk'                   => [
+                'image',
+                'max:800',
+                'mimes:jpg,jpeg,png',
+                Rule::requiredIf($status_isi != 2)
+            ],
             'bpjs_ketenagakerjaan' => 'image|max:800|mimes:jpg,jpeg,png',
             'bpjs_kesehatan'       => 'image|max:800|mimes:jpg,jpeg,png',
             'npwp'                 => 'image|max:800|mimes:jpg,jpeg,png'
-        ],
-        [
+        ], [
             'nama_lengkap.required'        => 'Nama Harus Diisi',
             'jenis_kelamin.required'       => 'Pilih Jenis Kelamin',
-            'tanggal_lahir'                => 'Tanggal Lahir Harus Diisi',
+            'tanggal_lahir.required'       => 'Tanggal Lahir Harus Diisi',
             'tempat_lahir.required'        => 'Tempat Lahir Harus Diisi',
             'no_hp.required'               => 'No HP Harus Diisi',
             'no_hp.numeric'                => 'No HP Harus Angka',
@@ -182,10 +198,12 @@ class DataPribadiController extends Controller
             'buku_nikah.image'             => 'File Harus Foto',   
             'buku_nikah.mimes'             => 'Format Harus .jpg/.jpeg/.png',
             'buku_nikah.max'               => 'Ukuran File Tidak Boleh Lebih Dari 800 KB',
-            'nik_pribadi.required'         => 'NIK Harus Diisi',
-            'nik_pribadi.numeric'          => 'NIK Harus Angka',
-            'nik_pribadi.gt'               => 'NIK Tidak Boleh Min',
-            'ktp.required'                 => 'KTP Harus Diisi',
+            'nik.required'                 => 'NIK Harus Diisi',
+            'nik.numeric'                  => 'NIK Harus Angka',
+            'nik.gt'                       => 'NIK Tidak Boleh Min',
+            'nik.digits_between'           => 'NIK Harus 16-17 Digit',
+            'nik.unique'                   => 'NIK Sudah Terdaftar',
+            'ktp.required_if'              => 'KTP Harus Diisi',
             'ktp.image'                    => 'File Harus Foto',   
             'ktp.mimes'                    => 'Format Harus .jpg/.jpeg/.png',
             'ktp.max'                      => 'Ukuran File Tidak Boleh Lebih Dari 800 KB',
@@ -195,7 +213,7 @@ class DataPribadiController extends Controller
             'sim.image'                    => 'File Harus Foto',   
             'sim.mimes'                    => 'Format Harus .jpg/.jpeg/.png',
             'sim.max'                      => 'Ukuran File Tidak Boleh Lebih Dari 800 KB',
-            'kk.required'                  => 'KK Harus Diisi',
+            'kk.required_if'               => 'KK Harus Diisi',
             'kk.image'                     => 'File Harus Foto',   
             'kk.mimes'                     => 'Format Harus .jpg/.jpeg/.png',
             'kk.max'                       => 'Ukuran File Tidak Boleh Lebih Dari 800 KB',
@@ -299,7 +317,7 @@ class DataPribadiController extends Controller
         }
 
         $status_isi = $request->input('status_isi');
-        // $data_pribadi = data_pribadi::findOrFail($request->id);
+
         $data_pribadi->nama_lengkap         = $validateData['nama_lengkap'];
         $data_pribadi->jenis_kelamin        = $validateData['jenis_kelamin'];
         $data_pribadi->tanggal_lahir        = $validateData['tanggal_lahir'];
@@ -320,16 +338,16 @@ class DataPribadiController extends Controller
         $data_pribadi->bpjs_ketenagakerjaan = $nama_bpjs_ketenagakerjaan_baru;
         $data_pribadi->bpjs_kesehatan       = $nama_bpjs_kesehatan_baru;
         $data_pribadi->npwp                 = $nama_npwp_baru;
-        $data_pribadi->nik                  = $validateData['nik_pribadi'];
+        $data_pribadi->nik                  = $validateData['nik'];
         $data_pribadi->status_isi           = $status_isi;
         $data_pribadi->update();
 
         if($data_pribadi->status_isi == '1' && $data_pribadi->status_kawin == 'TK') {
             Alert::success('Data Tersimpan', "Terima Kasih Sudah Mengisi Data");
-            return redirect('data_keluarga_kandung');
+            return redirect('data_karyawan?tab=tab_3');
         } else {
             Alert::success('Data Tersimpan', "Terima Kasih Sudah Mengisi Data");
-            return redirect('data_keluarga_inti');
+            return redirect('data_karyawan?tab=tab_2');
         }
     }
 

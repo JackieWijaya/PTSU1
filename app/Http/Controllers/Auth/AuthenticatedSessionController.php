@@ -36,10 +36,10 @@ class AuthenticatedSessionController extends Controller
         // Redirect berdasarkan peran user
         if (Auth::user()->role === 'Karyawan' && $data_pribadi->status_isi == '1') {
             return redirect()->intended('/presensi');
+        } else {
+            return redirect()->intended(RouteServiceProvider::HOME);
         }
-
         // return redirect()->intended('/data_karyawan');
-        return redirect()->intended(RouteServiceProvider::HOME);
     }
 
     /**

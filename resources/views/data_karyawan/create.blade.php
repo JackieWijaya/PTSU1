@@ -17,7 +17,7 @@
         }
     </style>
 
-    <div class="card mt-2">
+    <div class="card">
         <div class="card-header">
             <h3 class="card-title">Tambah Data Karyawan</h3>
         </div>
@@ -45,7 +45,7 @@
                             </div>
                             <input type="text" class="form-control @error('no_hp') is-invalid @enderror" name="no_hp"
                                 id="no_hp" value="{{ old('no_hp') }}" pattern="[0-9]+" title="Masukkan hanya angka"
-                                placeholder="0812 3456 7890">
+                                placeholder="081234567890">
                         </div>
 
                         @error('no_hp')
@@ -86,8 +86,13 @@
 
                     <div class="form-group col-lg-3 col-md-3 col-sm-6">
                         <label for="devisi">Devisi</label>
-                        <input type="text" class="form-control @error('devisi') is-invalid @enderror" name="devisi"
-                            id="devisi"value="{{ old('devisi') }}" placeholder="Enter Devisi">
+                        <select name="devisi" id="devisi" class="form-control @error('devisi') is-invalid @enderror">
+                            <option value="">-- Pilih Devisi --</option>
+                            @foreach ($devisis as $item)
+                                <option value="{{ $item->id }}" {{ old('devisi') == $item->id ? 'selected' : '' }}>
+                                    {{ $item->nama_devisi }} </option>
+                            @endforeach
+                        </select>
 
                         @error('devisi')
                             <div class="text-danger">{{ $message }}</div>
@@ -116,7 +121,7 @@
                     </div>
                 </div>
 
-                <button type="submit" id="btnSimpan" class="btn btn-primary">Simpan</button>
+                <button type="submit" id="btnSimpan" class="btn btn-primary mt-2">Simpan</button>
             </form>
         </div>
     </div>
