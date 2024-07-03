@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\jabatan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class JabatanController extends Controller
@@ -15,7 +16,11 @@ class JabatanController extends Controller
     {
         //
         $jabatans = jabatan::all();
-        return view('jabatan.index')->with('jabatans', $jabatans);
+        if (Auth::user()->role == 'HRD') {
+            return view('jabatan.index')->with('jabatans', $jabatans);
+        } else {
+            abort(401, 'Unauthorized');
+        }
     }
 
     /**

@@ -19,7 +19,11 @@ class DataPelamarController extends Controller
         //
         if (Auth::user()) {
             $data_pelamars = data_pelamar::all();
-            return view('data_pelamar.index')->with('data_pelamars', $data_pelamars);
+            if (Auth::user()->role == 'HRD') {
+                return view('data_pelamar.index')->with('data_pelamars', $data_pelamars);
+            } else {
+                abort(401, 'Unauthorized');
+            }
         } else {
             return view('data_pelamar.create');
         }

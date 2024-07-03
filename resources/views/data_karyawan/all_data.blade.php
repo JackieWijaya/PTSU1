@@ -53,11 +53,18 @@
                             @endif
                         </td>
                         <td>
-                            @if ($item->status_user == 'Aktif')
-                                <small class="badge badge-success">{{ $item->status_user }}</small>
-                            @else
-                                <small class="badge badge-danger">{{ $item->status_user }}</small>
-                            @endif
+                            <form action="{{ route('status.update', ['status' => $item->users_id]) }}" method="POST"
+                                enctype="multipart/form-data">
+                                @method('PATCH')
+                                @csrf
+                                @if ($item->status_user == 'Aktif')
+                                    <button type="submit" class="badge badge-success" name="status"
+                                        value="Aktif">{{ $item->status_user }}</button>
+                                @else
+                                    <button type="submit" class="badge badge-danger" name="status"
+                                        value="Tidak Aktif">{{ $item->status_user }}</button>
+                                @endif
+                            </form>
                         </td>
                         <td>
                             <a href="#" data-id="{{ $item->id }}"

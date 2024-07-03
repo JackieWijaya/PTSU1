@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\devisi;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class DevisiController extends Controller
@@ -15,7 +16,11 @@ class DevisiController extends Controller
     {
         //
         $devisis = devisi::all();
-        return view('devisi.index')->with('devisis', $devisis);
+        if (Auth::user()->role == 'HRD') {
+            return view('devisi.index')->with('devisis', $devisis);
+        } else {
+            abort(401, 'Unauthorized');
+        }
     }
 
     /**

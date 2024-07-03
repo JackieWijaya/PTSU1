@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\pengaturan_presensi;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class PengaturanPresensiController extends Controller
@@ -16,7 +17,11 @@ class PengaturanPresensiController extends Controller
         //
         $pengaturan_presensi = pengaturan_presensi::where('id', 1)->first();
         // dd($pengaturan_presensi);
-        return view('pengaturan.presensi')->with('pengaturan_presensi', $pengaturan_presensi);
+        if (Auth::user()->role == 'HRD') {
+            return view('pengaturan.presensi')->with('pengaturan_presensi', $pengaturan_presensi);
+        } else {
+            abort(401, 'Unauthorized');
+        }
     }
 
     /**

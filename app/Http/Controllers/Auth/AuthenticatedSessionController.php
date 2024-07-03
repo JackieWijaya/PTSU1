@@ -8,6 +8,7 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\View\View;
 use App\Models\data_pribadi;
 
@@ -34,10 +35,21 @@ class AuthenticatedSessionController extends Controller
         $data_pribadi = data_pribadi::where('no_hp', $no_hp)->first();
 
         // Redirect berdasarkan peran user
-        if (Auth::user()->role === 'Karyawan' && $data_pribadi->status_isi == '1') {
-            return redirect()->intended('/presensi');
+        if (Auth::user()->status_user === 'Aktif') {
+            if (Auth::user()->role === 'Karyawan' && $data_pribadi->status_isi == '1') {
+                return redirect()->intended('/presensi');
+            } else {
+                return redirect()->intended(RouteServiceProvider::HOME);
+            }
         } else {
-            return redirect()->intended(RouteServiceProvider::HOME);
+            Auth::guard('web')->logout();
+
+            $request->session()->invalidate();
+
+            $request->session()->regenerateToken();
+            
+            Alert::error('Gagal Login', "Maaf Status Anda Sudah Tidak Aktif");
+            return redirect('/');
         }
         // return redirect()->intended('/data_karyawan');
     }

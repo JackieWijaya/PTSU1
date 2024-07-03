@@ -74,7 +74,11 @@ class RekapPresensiController extends Controller
             $presensi->total_waktu_terlambat = sprintf('%02d Jam %02d Menit %02d Detik', $total_jam, $total_menit, $total_detik);
         }
 
-        return view('presensi.rekap', compact('presensis', 'bulan', 'tahun'));
+        if (Auth::user()->role == 'HRD') {
+            return view('presensi.rekap', compact('presensis', 'bulan', 'tahun'));
+        } else {
+            abort(401, 'Unauthorized');
+        }
     }
 
     public function selisih($jam_masuk, $jam_keluar)
