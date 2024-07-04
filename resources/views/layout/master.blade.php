@@ -153,7 +153,19 @@
                                     </li>
                                 </ul>
                             </li>
+                        @endif
 
+                        <li class="nav-item">
+                            <a href="{{ url('dashboard') }}"
+                                class="nav-link {{ Request::is('dashboard*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-tachometer-alt"></i>
+                                <p>
+                                    Dashboard
+                                </p>
+                            </a>
+                        </li>
+
+                        @if (Auth::user()->role == 'HRD')
                             <li class="nav-item">
                                 <a href="{{ url('data_pelamar') }}"
                                     class="nav-link {{ Request::is('data_pelamar*') ? 'active' : '' }}">

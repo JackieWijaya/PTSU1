@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DevisiController;
 use App\Http\Controllers\JabatanController;
 use App\Http\Controllers\DataPribadiController;
@@ -41,9 +42,9 @@ Route::get('/', function () {
 
         if (Auth::user()->status_user === 'Aktif') {
             if (Auth::user()->role === 'Karyawan' && $data_pribadi->status_isi == '1') {
-                return redirect('/presensi');
+                return redirect('/dashboard');
             } else {
-                return redirect('/data_karyawan');
+                return redirect('/dashboard');
             }
         } else {
             Alert::error('Gagal Login', "Maaf Status Anda Sudah Tidak Aktif");
@@ -53,7 +54,7 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
-
+    Route::resource('/dashboard', DashboardController::class)->middleware(['auth', 'verified']);
     Route::resource('/devisi', DevisiController::class)->middleware(['auth', 'verified']);
     Route::resource('/jabatan', JabatanController::class)->middleware(['auth', 'verified']);
     Route::resource('/data_pelamar', DataPelamarController::class);
